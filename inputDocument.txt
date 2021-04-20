@@ -1,0 +1,11 @@
+
+
+
+
+location:Taipei
+cropItem: tomato
+  Input style: ["crop", "timeScale"]
+timeScale: 
+planting condition:
+greenhouse type:
+greenhouse equipment:

@@ -1,0 +1,4 @@
+location:
+cropItem: tomato
+timeScale: 
+planting condition:

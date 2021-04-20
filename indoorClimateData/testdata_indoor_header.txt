@@ -1,0 +1,4 @@
+"TOA5","aifarm_indoor","CR1000","11846","CR1000.Std.32.02","CPU:aifarm_indoor 1090911A.CR1","54631","aifarm_indoor"
+"TIMESTAMP","RECORD","BattV_Avg","PTemp_C_Avg","AirTC_Avg","RH","PAR_Avg","SHF_Avg","NR_Wm2_Avg","VW_F_Avg","VW_M_Avg","VW_B_Avg","Eb1_Avg","EC1_Avg","Temp1_Avg","VWC1_Avg","Eb2_Avg","EC2_Avg","Temp2_Avg","VWC2_Avg"
+"TS","RN","Volts","Deg C","Deg C","%","umol","W/m^2","Watts/meter^2","","","","m^3/m^3","ds/m","DegC","","m^3/m^3","ds/m","DegC",""
+"","","Avg","Avg","Avg","Smp","Avg","Avg","Avg","Avg","Avg","Avg","Avg","Avg","Avg","Avg","Avg","Avg","Avg","Avg"
