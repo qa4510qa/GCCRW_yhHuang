@@ -1,0 +1,11 @@
+Hazard,Operation_Method,Risk_Factor,Risk_Light
+高溫,長期投資規劃,Sensitivity,yellow
+高溫,評估此地區未來氣候是否適合此作物,Exposure,orange
+低溫,長期投資規劃,Sensitivity,yellow
+低溫,評估此地區未來氣候是否適合此作物,Exposure,orange
+高濕,長期投資規劃,Sensitivity,yellow
+高濕,評估此地區未來氣候是否適合此作物,Exposure,orange
+強風,長期投資規劃,Sensitivity,yellow
+強風,評估此地區未來氣候是否適合此作物,Exposure,orange
+乾旱,長期投資規劃,Sensitivity,yellow
+乾旱,評估此地區未來氣候是否適合此作物,Exposure,orange

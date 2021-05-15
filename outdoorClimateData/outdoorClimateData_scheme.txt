@@ -1,0 +1,1 @@
+TIMESTAMP,RECORD,BattV_Avg,PTemp_C_Avg,AirTC_Avg,RH,PAR_Avg,WS_ms_Avg,WindDir,LWmV_Avg,LWMDry_Tot,LWMCon_Tot,LWMWet_Tot

@@ -1,0 +1,6 @@
+Hazard,Operation_Method,Risk_Factor,Risk_Light
+高溫,開啟排風機、內循環扇、拉起側邊塑膠布保持空氣流通,Adaptation,yellow
+低溫,放下側邊塑膠布減少空氣流通,Adaptation,yellow
+高濕,開啟內循環扇，若外部濕度低則開啟排風機並拉起側邊塑膠布保持空氣流通，若外部濕度同樣高則定時拉起塑膠布排除水氣即可,Adaptation,yellow
+強風,若風速過強，為了避免溫室倒塌，需拉起塑膠簾使空氣流通，可能需犧牲當前溫室內部作物,Adaptation,orange
+乾旱,精準控制滴灌系統灌溉位置減少用水,Adaptation,orange

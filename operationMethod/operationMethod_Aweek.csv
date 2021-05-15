@@ -1,0 +1,11 @@
+Hazard,Operation_Method,Risk_Factor,Risk_Light
+高溫,提早預警，可在高溫發生前提早採取降溫措施，同即時尺度採取手段,Adaptation,yellow
+高溫,評估是否實施搶收,Exposure,red
+低溫,提早預警，可在低溫發生前提早採取保溫措施，如透過適量肥料、草木灰提升土溫,Adaptation,orange
+低溫,評估是否實施搶收,Exposure,red
+高濕,提早預警，可在高濕發生前提早採取除濕措施，如放置乾草、乾土於溫室內吸收水氣、減少直接暴露於空氣中的水體,Adaptation,orange
+高濕,評估是否實施搶收,Exposure,red
+強風,提早預警，可考慮設施補強,Sensitivity,orange
+強風,評估是否實施搶收,Exposure,red
+乾旱,儲備水源、設備檢修,Adaptation,orange
+乾旱,評估是否實施搶收,Exposure,red

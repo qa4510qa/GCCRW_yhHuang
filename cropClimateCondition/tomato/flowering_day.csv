@@ -1,5 +1,7 @@
-,over low/low,low/proper,proper/high,high/over high
-AirTC_Avg,15,20,30,35
-RH,,50,65,
-PAR_Avg,,800,1200,
-VW_F_Avg,,75,85,
+﻿,very low/low,low/slightly low,slightly low/proper,proper/slightly high,slightly high/high,high/very high
+AirTC_Avg,10,15,20,28,33,36
+RH,-,20,50,65,80,95
+PAR_Avg,0,400,800,1200,1400,1600
+VW_F_Avg,40,50,75,85,95,100
+WS_ms_Avg,-,-,0,10,20,25
+Water_Demand,-,-,1250,1500,-,-

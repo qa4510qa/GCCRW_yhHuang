@@ -1,1 +1,1 @@
-"TIMESTAMP","RECORD","BattV_Avg","PTemp_C_Avg","AirTC_Avg","RH","PAR_Avg","SHF_Avg","NR_Wm2_Avg","VW_F_Avg","VW_M_Avg","VW_B_Avg","Eb1_Avg","EC1_Avg","Temp1_Avg","VWC1_Avg","Eb2_Avg","EC2_Avg","Temp2_Avg","VWC2_Avg"
+TIMESTAMP,RECORD,BattV_Avg,PTemp_C_Avg,AirTC_Avg,RH,PAR_Avg,SHF_Avg,NR_Wm2_Avg,VW_F_Avg,VW_M_Avg,VW_B_Avg,Eb1_Avg,EC1_Avg,Temp1_Avg,VWC1_Avg,Eb2_Avg,EC2_Avg,Temp2_Avg,VWC2_Avg

@@ -1,4 +1,4 @@
-location:
-cropItem: tomato
-timeScale: 
-planting condition:
+location postal code:320
+cropItem:tomato
+growthStage:flowering
+operation method:

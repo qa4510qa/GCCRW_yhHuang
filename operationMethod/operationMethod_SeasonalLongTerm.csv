@@ -1,0 +1,11 @@
+Hazard,Operation_Method,Risk_Factor,Risk_Light
+高溫,評估是否轉作,Exposure,red
+高溫,評估是否添購設備,Sensitivity,orange
+低溫,評估是否轉作,Exposure,red
+低溫,評估是否添購設備,Sensitivity,orange
+高濕,評估是否轉作,Exposure,red
+高濕,評估是否添購設備,Sensitivity,orange
+強風,評估是否轉作,Exposure,red
+強風,評估是否設施補強，或者更換網布,Sensitivity,orange
+乾旱,評估是否轉作,Exposure,red
+乾旱,評估是否添購設備,Sensitivity,orange

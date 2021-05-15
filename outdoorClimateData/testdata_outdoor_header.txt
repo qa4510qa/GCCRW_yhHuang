@@ -1,0 +1,4 @@
+TOA5,aifarm_outdoor,CR1000X,2805,CR1000X.Std.01.02,CPU:aifarm_outdoor_2.CR1X,55134,aifarm_outdoor
+TIMESTAMP,RECORD,BattV_Avg,PTemp_C_Avg,AirTC_Avg,RH,PAR_Avg,WS_ms_Avg,WindDir,LWmV_Avg,LWMDry_Tot,LWMCon_Tot,LWMWet_Tot
+TS,RN,Volts,Deg C,Deg C,%,umol,meters/second,degrees,mV,Minutes,Minutes,Minutes
+,,Avg,Avg,Avg,Smp,Avg,Avg,Smp,Avg,Tot,Tot,Tot

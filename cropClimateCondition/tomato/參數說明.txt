@@ -1,0 +1,7 @@
+資料標示：項目名稱，資料類別，單位
+AirTC_Avg：空氣溫度，indoorClimate，度Ｃ
+RH：空氣濕度，indoorClimate，％
+PAR_Avg：日照量，indoorClimate，μmol/m^2
+VW_F_Avg：土壤濕度（Front），indoorClimate，％ 
+WS_ms_Avg_outdoor：風速，indoorClimate， m/s
+Water_Storage：儲水量，systemCapacity，l
