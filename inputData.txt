@@ -1,4 +1,3 @@
-location postal code:320
+location:中壢區
 cropItem:tomato
-growthStage:flowering
-operation method:
+growthStage:flowering,flowering,flowering
