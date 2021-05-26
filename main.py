@@ -151,9 +151,39 @@ def realTimeRiskAssessment(hazardScale):
     riskLight["低溫"]="green"
     riskLight['高溫']=riskLightScale[riskScale.index(risk["AirTC_Avg"])]
   
+  record = open('./systemRecord/realTime_riskLight.txt', 'r')
+  record = record.readlines()
+  # print(record[-1].split('{')[-1].replace("}",'').split(',')[4].split(':')[1].replace(" ",'').replace("\n",'').replace("'",''))
+  if riskLight['高溫']=="orange" and len(record)>=4:
+    a=0
+    for i in range(3): # 忍受時間設為30分鐘
+      if record[-1].split('{')[-1].replace("}",'').split(',')[4].split(':')[1].replace(" ",'').replace("\n",'').replace("'",'') == "orange":
+        a+=1
+    if a == 3:
+      riskLight['高溫']=="red"
+  if riskLight['低溫']=="orange"and len(record)>=4:
+    a=0
+    for i in range(3): # 忍受時間設為30分鐘
+      if record[-1].split('{')[-1].replace("}",'').split(',')[3].split(':')[1].replace(" ",'').replace("\n",'').replace("'",'') == "orange":
+        a+=1
+    if a == 3:
+      riskLight['低溫']=="red"
+  if (riskLight['高濕']=="orange" or riskLight['高濕']=="yellow") and len(record)>=145:
+    a=0
+    for i in range(144): # 忍受時間設為1天
+      if record[-1].split('{')[-1].replace("}",'').split(',')[1].split(':')[1].replace(" ",'').replace("\n",'').replace("'",'') == "red":
+        a+=2
+      elif record[-1].split('{')[-1].replace("}",'').split(',')[1].split(':')[1].replace(" ",'').replace("\n",'').replace("'",'') == "orange":
+        a+=1
+      elif record[-1].split('{')[-1].replace("}",'').split(',')[1].split(':')[1].replace(" ",'').replace("\n",'').replace("'",'') == "green":
+        a=0
+        break
+    if a >= 144:
+      riskLight['高濕'] = riskLightScale[max(0,riskLightScale.index(riskLight["高濕"][0])-1)]
+    
   print('realTime riskLight:{0}\n'.format(riskLight))
-  f = open('./systemRecord/systemRecord.txt', 'a')
-  f.write('{0} realTime riskLight :{1}\n'.format(now.strftime('%Y-%m-%d %H:%M'),riskLight))
+  f = open('./systemRecord/realTime_riskLight.txt', 'a')
+  f.write('{0}{1}\n'.format(now.strftime('%Y-%m-%d %H:%M'),riskLight))
   f.close()
   return riskLight
 
@@ -296,8 +326,8 @@ def aWeekRiskAssessment(location, hazardScale, riskLight_realTime):
           riskLight["乾旱"].append(riskLightScale[riskScale.index(risk[i][j])])
   
   print('aWeek riskLight:{0}\n'.format(riskLight))
-  f = open('./systemRecord/systemRecord.txt', 'a')
-  f.write('{0} aWeek riskLight :{1}\n'.format(now.strftime('%Y-%m-%d %H:%M'),riskLight))
+  f = open('./systemRecord/aWeek_riskLight.txt', 'a')
+  f.write('{0}{1}\n'.format(now.strftime('%Y-%m-%d %H:%M'),riskLight))
   f.close()
   return riskLight
 
@@ -433,7 +463,7 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek):
         while ecdf_PRCP.x[t]<P66_range['PRCP'][j][0]:
           t+=1
         # print(ecdf_PRCP.y[t])
-        if ecdf_PRCP.y[t]>0.4:
+        if ecdf_PRCP.y[t]>0.4:                  # 使用降雨量與歷史降雨量比教作為乾旱判斷之依據
           risk[i].append('proper')
           continue
         elif ecdf_PRCP.y[t]>0.3:
@@ -487,11 +517,12 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek):
         else:
           riskLight["乾旱"].append(riskLightScale[riskScale.index(risk[i][j])])
   
-
+  if riskLight_aWeek["乾旱"][-2] == 'orange' or riskLight_aWeek["乾旱"][-2] == 'red':
+    riskLight["乾旱"][0] = riskLightScale[max(0,riskLightScale.index(riskLight["乾旱"][0])-1)]
 
   print('seasonalLongTerm riskLight:{0}\n'.format(riskLight))
-  f = open('./systemRecord/systemRecord.txt', 'a')
-  f.write('{0} seasonalLongTerm riskLight :{1}\n'.format(now.strftime('%Y-%m-%d %H:%M'),riskLight))
+  f = open('./systemRecord/seasonalLongTerm_riskLight.txt', 'a')
+  f.write('{0}{1}\n'.format(now.strftime('%Y-%m-%d %H:%M'),riskLight))
   f.close()
   return riskLight
 
@@ -526,8 +557,8 @@ def operationAssessment(timeScale,riskLight):
             else:
               operationalSuggestion[line[0]]["time"] = '{0}天後的晚上面臨危害'.format(int((i-1)/2))
   # print('{0} operationalSuggestion:{1}\n'.format(timeScale, operationalSuggestion))
-  f = open('./systemRecord/systemRecord.txt', 'a')
-  f.write('{0} {1} operationalSuggestion :{2}\n'.format(now.strftime('%Y-%m-%d %H:%M'), timeScale, operationalSuggestion))
+  f = open('./systemRecord/{}_operation.txt'.format(timeScale), 'a')
+  f.write('{0}:{1}\n'.format(now.strftime('%Y-%m-%d %H:%M'), operationalSuggestion))
   f.close()
   return operationalSuggestion
 
