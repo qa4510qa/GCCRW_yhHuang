@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
+from os import listdir
 import numpy as np
 import math
 import random
@@ -11,6 +12,7 @@ import requests
 from datetime import date, datetime
 import matplotlib.pyplot as plt
 from statsmodels.distributions.empirical_distribution import ECDF
+import AR6_CDS_GCM
 
 # from statsmodels.distributions.empirical_distribution import ECDF
 CWB_API_Key = 'CWB-B7BC29A4-FADA-4DE6-9918-F2FA71A55F80'
@@ -60,6 +62,15 @@ def getHazardScale(crop, growthStage, timeScale):
         for row in rows:
           if row[0] == 'AirTC_Avg':
             hazardScale['AirTC_Avg_night'].append(row[1:])
+  elif timeScale == "climateChange":
+    files = listdir("./cropClimateCondition/{0}".format(crop))
+    for file in files:
+      if file[-3:] == 'csv':
+        with open('./cropClimateCondition/{0}/{1}'.format(crop ,file), newline='') as csvfile:
+          rows = csv.reader(csvfile)
+          for row in rows:
+            if row[0] != '\ufeff':
+              hazardScale['{0}_{1}_{2}'.format( file[:file.index('_')], row[0], file[file.index('_')+1:file.index('.')])] = row[1:]
   print('{0} hazardScale: {1}\n'.format(timeScale, hazardScale))
   return hazardScale
 
@@ -526,7 +537,91 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek):
   f.close()
   return riskLight
 
-# def climateChangeRiskAssessment(crop, timeRange):
+def climateChangeRiskAssessment(hazardScale):
+  num_of_days=[31,28,31,30,31,30,31,31,30,31,30,31]
+  rawData={"date":[],"TEMP":[],"PRCP":[]}
+  DataArray_month = [[],[],[],[]] # month,TEMP,PRCP,date
+  monthly_PRCP = [] # monthly PRCP
+  monthly_PRCP_count = []
+  IsPRCPZeroRate=[] # PRCP
+  historyData=open("./historyClimateData/climateData_daily_466920.csv","r")
+  line = historyData.readline()
+  for line in historyData:
+    if line.split(',')[1] != "":
+      rawData["date"].append(line.split(',')[1])
+      rawData["TEMP"].append(line.split(',')[2])
+      rawData["PRCP"].append(line.split(',')[3])
+  len_of_data = len(rawData["date"])
+
+  for i in range(12):
+    DataArray_month[0].append(str(i+1)) # month
+    DataArray_month[1].append([]) # TEMP
+    DataArray_month[2].append([]) # PRCP
+    DataArray_month[3].append([]) # date
+    monthly_PRCP.append([])
+    monthly_PRCP_count.append([])
+    for j in range(20):
+      monthly_PRCP_count[i].append(0)
+      monthly_PRCP[i].append(0)
+
+  for i in range(len_of_data):
+    year = int(rawData["date"][i][:4])
+    if year>=1996 and year<=2015:
+      j=int(rawData["date"][i][4:6])
+      DataArray_month[1][j-1].append(rawData["TEMP"][i])
+      DataArray_month[2][j-1].append(rawData["PRCP"][i])
+      DataArray_month[3][j-1].append(rawData["date"][i])
+      if rawData["PRCP"][i] != '-9999' and rawData["PRCP"][i] != '-9998' and rawData["PRCP"][i] != '-9997' and rawData["PRCP"][i] != '0':
+        monthly_PRCP_count[j-1][year-1996]+=1
+        monthly_PRCP[j-1][year-1996]+=float(rawData["PRCP"][i])
+
+  for i in range(12):
+    for j in range(20):
+      if monthly_PRCP_count[i][j] == 0:
+        break
+      else:
+        monthly_PRCP[i][j] = monthly_PRCP[i][j]/monthly_PRCP_count[i][j]*num_of_days[i]
+    while 0 in monthly_PRCP[i]:
+      monthly_PRCP[i].remove(0)
+  # print(monthly_PRCP)
+
+  for i in range(12):
+    count=0
+    for j in range(len(DataArray_month[2][i])):
+      if(DataArray_month[2][i][j]=="0"):
+        count+=1
+    IsPRCPZeroRate.append(round((float(count)/float(len(DataArray_month[2][i])))*1000)/1000)
+  # print(IsPRCPZeroRate)
+
+  for i in range(1,3,1):
+    for j in range(12):
+      while '-9999' in DataArray_month[i][j]:
+        DataArray_month[i][j].remove('-9999')
+      while '-9998' in DataArray_month[i][j]:
+        DataArray_month[i][j].remove('-9998')
+      while '-9997' in DataArray_month[i][j]:
+        DataArray_month[i][j].remove('-9997')
+      while '0' in DataArray_month[i][j]:
+        DataArray_month[i][j].remove('0') # 沒有下雨的情況另外用isZeroRate討論
+      for k in range(len(DataArray_month[i][j])):
+        DataArray_month[i][j][k]=float(DataArray_month[i][j][k])
+  # print(DataArray_month)
+
+  historical_mean = {"TEMP":[], "PRCP":[]} # 12 month, monthly for both
+  historical_std = {"TEMP":[], "PRCP":[]}
+  for i in range(12):
+    historical_mean["TEMP"].append(np.mean(DataArray_month[1][i]))
+    historical_std["TEMP"].append(np.std(DataArray_month[1][i],ddof=1))
+    historical_mean["PRCP"].append(np.mean(monthly_PRCP[i]))
+    historical_std["PRCP"].append(np.std(monthly_PRCP[i],ddof=1))
+  # scenarios = ['ssp126', 'ssp245', 'ssp585']
+  # baseline_tas = AR6_CDS_GCM.main(argv=['./climateChange_data/CMIP6/tas_Amon_HadGEM3-GC31-LL_historical_r1i1p1f3_gn_19010116-20141216.nc',[1996,2015]]) # argv = [file_path, [start_year, end_year]]
+  # baseline_pr = AR6_CDS_GCM.main(argv=['./climateChange_data/CMIP6/pr_Amon_HadGEM3-GC31-LL_historical_r1i1p1f3_gn_19010116-20141216.nc',[1996,2015]])
+  # for i in scenarios:
+  #   forecast_tas = AR6_CDS_GCM.main(argv=['./climateChange_data/CMIP6/tas_Amon_HadGEM3-GC31-LL_{0}_r1i1p1f3_gn_20150116-21001216.nc'.format(i),[2021,2060]])
+  #   forecast_pr = AR6_CDS_GCM.main(argv=['./climateChange_data/CMIP6/pr_Amon_HadGEM3-GC31-LL_{0}_r1i1p1f3_gn_20150116-21001216.nc'.format(i),[2021,2160]])
+    
+
 
 def operationAssessment(timeScale,riskLight):
   operationalSuggestion={}
@@ -556,6 +651,19 @@ def operationAssessment(timeScale,riskLight):
               operationalSuggestion[line[0]]["time"] = '{0}天後的白天面臨危害'.format(int(i/2))
             else:
               operationalSuggestion[line[0]]["time"] = '{0}天後的晚上面臨危害'.format(int((i-1)/2))
+  elif timeScale == 'seasonalLongTerm':
+    for line in operationData.readlines():
+      line=line.split(',')
+      if line[0] in riskLight.keys():
+        # print(line[0])
+        for i in range(len((riskLight[line[0]]))):
+          # print(riskLight[line[0]][i])
+          if riskLight[line[0]][i] == line[-1].replace("\n",""):
+            operationalSuggestion[line[0]]={
+              "method":line[1],
+              "risk_factor":line[2]
+            }
+            operationalSuggestion[line[0]]["time"] = '{0}個月後面臨危害'.format(i+1)
   # print('{0} operationalSuggestion:{1}\n'.format(timeScale, operationalSuggestion))
   f = open('./systemRecord/{}_operation.txt'.format(timeScale), 'a')
   f.write('{0}:{1}\n'.format(now.strftime('%Y-%m-%d %H:%M'), operationalSuggestion))
@@ -563,6 +671,7 @@ def operationAssessment(timeScale,riskLight):
   return operationalSuggestion
 
 def indoorClimateDataEstimation(timescale,data):
+
   return data
 
 
@@ -583,22 +692,10 @@ def main():
 
   seasonalLongTermhazardScale = getHazardScale(crop, growthStage, "seasonalLongTerm")
   riskLight_seasonalLongTerm = seasonalLongTermRiskAssessment(seasonalLongTermhazardScale, riskLight_aWeek)
+  operationalSuggestion["seasonalLongTerm"]=operationAssessment("seasonalLongTerm",riskLight_seasonalLongTerm)
 
-  # crop = sys.argv[1] #[cropItem]
-  # timeScale = sys.argv[2] #'realTimeRiskAssessment',aWeekRiskAssessment ,'seasonalLongTermRiskAssessment', 'climateChangeRiskAssessment'
-  # if timeScale == 'realTime':
-  #   postalCode = sys.argv[3] #'postalCode'
-  #   growthStage = sys.argv[4] #'growthStageNow'
-    
-  #   realTimeRiskAssessment(crop, postalCode, condition)
-  # elif timeScale == 'aWeekForecast':
-  #   postalCode = sys.argv[3] #'postalCode'
-  #   growthStage = sys.argv[4] #'growthStageNow'
-  #   aWeekRiskAssessment(crop, postalCode, growthStage)
-  # elif timeScale == 'seasonalLongTerm':
+  climateChangehazardScale = getHazardScale(crop, "", "climateChange")
+  riskLight_climateChange = climateChangeRiskAssessment(climateChangehazardScale)
 
-  # elif timeScale == 'climateChange':
-
-  #擷取溫室即時物聯網資料以及外部中央氣象局即時測站資料
 
 main()
