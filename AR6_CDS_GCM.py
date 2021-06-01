@@ -116,7 +116,6 @@ def getNC(nc_fp,file_name):
 #     return data1
 
 def main(argv):
-
     path ="./" 
     file=argv[0]
     nc_fid=getNC(path,file)
@@ -141,7 +140,7 @@ def main(argv):
     str_time = [i.strftime("%Y-%m-%d %H:%M") for i in dates]
 
     #without pressure level
-    v=nc_fid.variables['tas'][:, lat_idx, lon_idx]
+    v=nc_fid.variables[argv[2]][:, lat_idx, lon_idx]
 
 
     time = argv[1]

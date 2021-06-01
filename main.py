@@ -4,6 +4,7 @@ import sys
 import os
 from os import listdir
 import numpy as np
+import pandas as pd
 import math
 import random
 import csv
@@ -571,7 +572,7 @@ def climateChangeRiskAssessment(hazardScale):
       DataArray_month[1][j-1].append(rawData["TEMP"][i])
       DataArray_month[2][j-1].append(rawData["PRCP"][i])
       DataArray_month[3][j-1].append(rawData["date"][i])
-      if rawData["PRCP"][i] != '-9999' and rawData["PRCP"][i] != '-9998' and rawData["PRCP"][i] != '-9997' and rawData["PRCP"][i] != '0':
+      if rawData["PRCP"][i] != '-9999' and rawData["PRCP"][i] != '-9998' and rawData["PRCP"][i] != '-9997': # dry day 一起平均
         monthly_PRCP_count[j-1][year-1996]+=1
         monthly_PRCP[j-1][year-1996]+=float(rawData["PRCP"][i])
 
@@ -614,14 +615,177 @@ def climateChangeRiskAssessment(hazardScale):
     historical_std["TEMP"].append(np.std(DataArray_month[1][i],ddof=1))
     historical_mean["PRCP"].append(np.mean(monthly_PRCP[i]))
     historical_std["PRCP"].append(np.std(monthly_PRCP[i],ddof=1))
-  # scenarios = ['ssp126', 'ssp245', 'ssp585']
-  # baseline_tas = AR6_CDS_GCM.main(argv=['./climateChange_data/CMIP6/tas_Amon_HadGEM3-GC31-LL_historical_r1i1p1f3_gn_19010116-20141216.nc',[1996,2015]]) # argv = [file_path, [start_year, end_year]]
-  # baseline_pr = AR6_CDS_GCM.main(argv=['./climateChange_data/CMIP6/pr_Amon_HadGEM3-GC31-LL_historical_r1i1p1f3_gn_19010116-20141216.nc',[1996,2015]])
-  # for i in scenarios:
-  #   forecast_tas = AR6_CDS_GCM.main(argv=['./climateChange_data/CMIP6/tas_Amon_HadGEM3-GC31-LL_{0}_r1i1p1f3_gn_20150116-21001216.nc'.format(i),[2021,2060]])
-  #   forecast_pr = AR6_CDS_GCM.main(argv=['./climateChange_data/CMIP6/pr_Amon_HadGEM3-GC31-LL_{0}_r1i1p1f3_gn_20150116-21001216.nc'.format(i),[2021,2160]])
-    
 
+  generatedData = {
+    'ssp126':{'time': [], 'TEMP': [], 'PRCP': []}, 
+    'ssp245':{'time': [], 'TEMP': [], 'PRCP': []}, 
+    'ssp585':{'time': [], 'TEMP': [], 'PRCP': []}
+  }
+  scenarios = ['ssp126', 'ssp245', 'ssp585']
+  tas = AR6_CDS_GCM.main(argv=['./climateChange_data/CMIP6/tas_Amon_HadGEM3-GC31-LL_historical_r1i1p1f3_gn_19010116-20141216.nc',[1996,2015], 'tas']) # argv = [file_path, [start_year, end_year]]
+  pr = AR6_CDS_GCM.main(argv=['./climateChange_data/CMIP6/pr_Amon_HadGEM3-GC31-LL_historical_r1i1p1f3_gn_19010116-20141216.nc',[1996,2015], 'pr']).to_dict()
+  tas_monthly = []
+  pr_monthly = []
+  for i in range(12):
+    tas_monthly.append([])
+    pr_monthly.append([])
+  for item in tas['value'].keys():
+    # print(int(tas['time'][item][5:7]))
+    # print(tas['value'][item])
+    tas_monthly[int(tas['time'][item][5:7])-1].append(tas['value'][item]-272.15) # 轉成攝氏溫度
+  for item in pr['value'].keys():
+    # print(int(tas['time'][item][5:7]))
+    # print(tas['value'][item])
+    pr_monthly[int(pr['time'][item][5:7])-1].append(pr['value'][item]*86400*num_of_days[int(pr['time'][item][5:7])-1]) # 轉成公釐/月
+  
+  baseline_mean = {"TEMP":[], "PRCP":[]} # 12 month, monthly for both
+  baseline_std = {"TEMP":[], "PRCP":[]}
+  for i in range(12):
+    baseline_mean['TEMP'].append(np.mean(tas_monthly[i]))
+    baseline_std['TEMP'].append(np.std(tas_monthly[i]))
+    baseline_mean['PRCP'].append(np.mean(pr_monthly[i]))
+    baseline_std['PRCP'].append(np.std(pr_monthly[i]))
+  # print(baseline_mean)
+  # print(baseline_std)
+  # print(historical_mean)
+  # print(historical_std)
+
+  for i in scenarios:
+    forecast_tas = {'time':[], 'value':[]}
+    forecast_pr = {'time':[], 'value':[]}
+    tas = AR6_CDS_GCM.main(argv=['./climateChange_data/CMIP6/tas_Amon_HadGEM3-GC31-LL_{0}_r1i1p1f3_gn_20150116-21001216.nc'.format(i),[2021,2060], 'tas']).to_dict()
+    pr = AR6_CDS_GCM.main(argv=['./climateChange_data/CMIP6/pr_Amon_HadGEM3-GC31-LL_{0}_r1i1p1f3_gn_20150116-21001216.nc'.format(i),[2021,2160], 'pr']).to_dict()
+    for item in tas['value'].keys():
+      forecast_tas['time'].append(tas['time'][item])
+      forecast_tas['value'].append(tas['value'][item]-272.15) # 轉成攝氏溫度
+    for item in pr['value'].keys():
+      forecast_pr['time'].append(pr['time'][item])
+      forecast_pr['value'].append(pr['value'][item]*86400*num_of_days[int(pr['time'][item][5:7])-1]) # 轉成公釐/月
+    # print(baseline_mean)
+    # print(historical_mean)
+    # print(forecast_tas['value'][0:12])
+    # print(forecast_pr['value'][0:12])
+    for j in range(480):
+      generatedData[i]['time'].append(forecast_tas['time'][j])
+      generatedData[i]['TEMP'].append(((forecast_tas['value'][j]-baseline_mean['TEMP'][j%12])/baseline_std['TEMP'][j%12])*historical_std['TEMP'][j%12]+historical_mean['TEMP'][j%12])
+      generatedData[i]['PRCP'].append(((forecast_pr['value'][j]-baseline_mean['PRCP'][j%12])/baseline_std['PRCP'][j%12])*historical_std['PRCP'][j%12]+historical_mean['PRCP'][j%12])
+  
+    for j in range(480):
+      f = open('./climateChange_data/weatherGeneration_monthly_{0}.csv'.format(i), 'w')
+      f.write('{0},{1},{2}\n'.format(generatedData[i]['time'][j], generatedData[i]['TEMP'][j], generatedData[i]['PRCP'][j]))
+      f.close()
+  # print(generatedData)
+  # print(hazardScale)
+  risk = {
+    'ssp126':{"MinT":[],"MaxT":[],"Water_Demand":[]},
+    'ssp245':{"MinT":[],"MaxT":[],"Water_Demand":[]},
+    'ssp585':{"MinT":[],"MaxT":[],"Water_Demand":[]}
+  } # 480 month
+  riskLight={
+    'ssp126':{"低溫":[],"高溫":[],"乾旱":[]},
+    'ssp245':{"低溫":[],"高溫":[],"乾旱":[]},
+    'ssp585':{"低溫":[],"高溫":[],"乾旱":[]}
+  } # 4 decade
+  corrFactor = {"MinT":"AirTC_Avg","MaxT":"AirTC_Avg","Water_Demand":"Water_Demand"} #climate factor and risk factor corresponding
+  
+  ecdf_PRCP=[]
+  for i in range(12):
+    ecdf_PRCP.append(ECDF(DataArray_month[2][i]))
+  for s in scenarios:
+    for i in risk[s].keys():
+      for j in range(480):
+        if i == 'MinT':
+          hazardScaleItem = hazardScale["nursery_AirTC_Avg_night"]
+          value = generatedData[s]['TEMP'][j]
+        elif i == 'MaxT':
+          hazardScaleItem = hazardScale["flowering_AirTC_Avg_day"]
+          value = generatedData[s]['TEMP'][j]
+        elif i == "Water_Demand":
+          hazardScaleItem = hazardScale["flowering_Water_Demand_day"]
+          t=0
+          # print(ecdf_PRCP.x)
+          # print(P66_range['PRCP'][j][0])
+          while ecdf_PRCP[480%12].x[t]<generatedData[s]['PRCP'][j]:
+            t+=1
+            if ecdf_PRCP[480%12].y[t]>0.4:
+              risk[s][i].append('proper')
+              break
+          # print(ecdf_PRCP.y[t])
+          if ecdf_PRCP[480%12].y[t]>0.4:                  # 使用降雨量與歷史降雨量比教作為乾旱判斷之依據
+            risk[s][i].append('proper')
+            continue
+          elif ecdf_PRCP[480%12].y[t]>0.3:
+            risk[s][i].append('slightly_low')
+            continue
+          elif ecdf_PRCP[480%12].y[t]>0.2:
+            risk[s][i].append('low')
+            continue
+          else:
+            risk[s][i].append('very_low')
+            continue
+        for k in range(6):
+          if hazardScaleItem[k]== '-':
+            continue
+          elif k==0 and float(hazardScaleItem[k])-fuzzyRange[corrFactor[i]]>=float(value):
+            risk[s][i].append(riskScale[0])
+            break
+          elif k==5 and float(hazardScaleItem[k])+fuzzyRange[corrFactor[i]]<=float(value):
+            risk[s][i].append(riskScale[6])
+          elif (float(hazardScaleItem[k])+fuzzyRange[corrFactor[i]])<=float(value) and hazardScaleItem[k+1]== '-':
+            risk[s][i].append(riskScale[k+1])
+            break
+          elif (float(hazardScaleItem[k])+fuzzyRange[corrFactor[i]])<=float(value) and (float(hazardScaleItem[k+1])-fuzzyRange[corrFactor[i]])>=float(value):
+            risk[s][i].append(riskScale[k+1])
+            break
+          elif float(value)>=(float(hazardScaleItem[k])-fuzzyRange[corrFactor[i]]) and float(value)<=(float(hazardScaleItem[k])+fuzzyRange[corrFactor[i]]):
+            r=random.random()
+            # print('r: {0}'.format(r))
+            if r>=(float(value)-(float(hazardScaleItem[k])-fuzzyRange[corrFactor[i]]))/(2*fuzzyRange[corrFactor[i]]):
+              risk[s][i].append(riskScale[k])
+            else:
+              risk[s][i].append(riskScale[k+1])
+            break  
+    print('climateChange riskScale_{0}:{1}\n'.format(s,risk[s]))
+    
+    score = 0
+    for i in risk[s]:
+      for j in range(480):
+        if i == "MinT":
+          Hz = '低溫'
+          if risk[s][i][j][-3:]=="igh":
+            risk[s][i][j] = 0
+          else:
+            risk[s][i][j] = -riskScale.index(risk[s][i][j])+3
+        elif i == "MaxT":
+          Hz = '高溫'
+          if risk[s][i][j][-3:]=="low":
+            risk[s][i][j] = 0
+          else:
+            risk[s][i][j] = riskScale.index(risk[s][i][j])-3
+        elif i == "Water_Demand":
+          Hz = '乾旱'
+          if risk[s][i][j][-3:]=="igh":
+            risk[s][i][j] = 0
+          else:
+            risk[s][i][j] =  -riskScale.index(risk[s][i][j])+3
+        if j%120 == 119:
+          # print(score)
+          if score<60:
+            riskLight[s][Hz].append('green')
+          elif score<120:
+            riskLight[s][Hz].append('yellow')
+          elif score<180:
+            riskLight[s][Hz].append('orange')
+          else:
+            riskLight[s][Hz].append('red')
+          score = 0
+        else:
+          score+=risk[s][i][j]
+  print('climateChange riskScale:{0}\n'.format(riskLight))
+  f = open('./systemRecord/climateChange_riskLight.txt', 'a')
+  f.write('{0}{1}\n'.format(now.strftime('%Y-%m-%d %H:%M'),riskLight))
+  f.close()
+  return riskLight
 
 def operationAssessment(timeScale,riskLight):
   operationalSuggestion={}
@@ -664,6 +828,20 @@ def operationAssessment(timeScale,riskLight):
               "risk_factor":line[2]
             }
             operationalSuggestion[line[0]]["time"] = '{0}個月後面臨危害'.format(i+1)
+  elif timeScale == 'climateChange':
+    for line in operationData.readlines():
+      line=line.split(',')
+      for scenario in riskLight.keys():
+        if line[0] in riskLight[scenario].keys():
+          # print(line[0])
+          for i in range(len((riskLight[scenario][line[0]]))):
+            # print(riskLight[line[0]][i])
+            if riskLight[scenario][line[0]][i] == line[-1].replace("\n",""):
+              operationalSuggestion[scenario+'_'+line[0]]={
+                "method":line[1],
+                "risk_factor":line[2]
+              }
+              operationalSuggestion[scenario+'_'+line[0]]["time"] = '{0}年內面臨危害'.format((i+1)*10)
   # print('{0} operationalSuggestion:{1}\n'.format(timeScale, operationalSuggestion))
   f = open('./systemRecord/{}_operation.txt'.format(timeScale), 'a')
   f.write('{0}:{1}\n'.format(now.strftime('%Y-%m-%d %H:%M'), operationalSuggestion))
@@ -696,6 +874,6 @@ def main():
 
   climateChangehazardScale = getHazardScale(crop, "", "climateChange")
   riskLight_climateChange = climateChangeRiskAssessment(climateChangehazardScale)
-
+  operationalSuggestion["climateChange"]=operationAssessment("climateChange",riskLight_climateChange)
 
 main()

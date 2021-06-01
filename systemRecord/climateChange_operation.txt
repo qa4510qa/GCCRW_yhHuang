@@ -1,0 +1,7 @@
+2021-06-01 19:15:{}
+2021-06-01 19:17:{}
+2021-06-01 19:18:{}
+2021-06-01 19:22:{}
+2021-06-01 19:30:{}
+2021-06-01 19:32:{'ssp126_高溫': {'method': '長期投資規劃', 'risk_factor': 'Sensitivity', 'time': '40年內面臨危害'}, 'ssp245_高溫': {'method': '長期投資規劃', 'risk_factor': 'Sensitivity', 'time': '40年內面臨危害'}, 'ssp585_高溫': {'method': '評估此地區未來氣候是否適合此作物', 'risk_factor': 'Exposure', 'time': '40年內面臨危害'}}
+2021-06-01 22:37:{'ssp126_高溫': {'method': '長期投資規劃', 'risk_factor': 'Sensitivity', 'time': '40年內面臨危害'}, 'ssp245_高溫': {'method': '長期投資規劃', 'risk_factor': 'Sensitivity', 'time': '40年內面臨危害'}, 'ssp585_高溫': {'method': '評估此地區未來氣候是否適合此作物', 'risk_factor': 'Exposure', 'time': '40年內面臨危害'}}
