@@ -155,3 +155,13 @@
 2021-06-01 19:31{'低溫': ['green', 'green', 'green'], '高溫': ['green', 'green', 'yellow'], '乾旱': ['green', 'green', 'green']}
 2021-06-01 19:32{'低溫': ['green', 'green', 'green'], '高溫': ['green', 'green', 'yellow'], '乾旱': ['green', 'green', 'green']}
 2021-06-01 22:37{'低溫': ['green', 'green', 'green'], '高溫': ['green', 'green', 'yellow'], '乾旱': ['green', 'green', 'green']}
+2021-06-04 14:25{'低溫': ['green', 'green', 'green'], '高溫': ['green', 'green', 'yellow'], '乾旱': ['green', 'green', 'green']}
+2021-06-04 14:28{'低溫': ['green', 'green', 'green'], '高溫': ['green', 'green', 'yellow'], '乾旱': ['green', 'green', 'green']}
+2021-06-05 14:35{'低溫': ['green', 'green', 'green'], '高溫': ['green', 'green', 'yellow'], '乾旱': ['green', 'green', 'green']}
+2021-06-05 14:48{'低溫': ['green', 'green', 'green'], '高溫': ['green', 'green', 'yellow'], '乾旱': ['green', 'green', 'green']}
+2021-06-05 14:49{'低溫': ['green', 'green', 'green'], '高溫': ['green', 'yellow', 'yellow'], '乾旱': ['green', 'green', 'green']}
+2021-06-05 14:59{'低溫': ['green', 'green', 'green'], '高溫': ['green', 'green', 'yellow'], '乾旱': ['green', 'green', 'green']}
+2021-06-05 15:00{'低溫': ['green', 'green', 'green'], '高溫': ['green', 'yellow', 'yellow'], '乾旱': ['green', 'green', 'green']}
+2021-06-05 15:01{'低溫': ['green', 'green', 'green'], '高溫': ['green', 'green', 'yellow'], '乾旱': ['green', 'green', 'green']}
+2021-06-05 15:01{'低溫': ['green', 'green', 'green'], '高溫': ['green', 'yellow', 'yellow'], '乾旱': ['green', 'green', 'green']}
+2021-06-06 11:37{'低溫': ['green', 'green', 'green'], '高溫': ['green', 'yellow', 'yellow'], '乾旱': ['green', 'green', 'green']}

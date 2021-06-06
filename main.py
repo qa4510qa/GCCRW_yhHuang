@@ -5,6 +5,7 @@ import os
 from os import listdir
 import numpy as np
 import pandas as pd
+from pygad import GA as ga
 import math
 import random
 import csv
@@ -200,7 +201,7 @@ def realTimeRiskAssessment(hazardScale):
   return riskLight
 
 def aWeekRiskAssessment(location, hazardScale, riskLight_realTime):
-  rawData = {"MinT":[],"MaxT":[],"RH":[],"WS":[],"Water_Storage":[]}
+  rawData = {"MinT":[],"MaxT":[],"RH":[],"WS":[],"Water_Storage":[],"HR":[], "MN":[]}
   riskLight={"高溫":[],"低溫":[],"高濕":[],"強風":[],"乾旱":[]}
   try:
     climatData_aWeekForecast = requests.get('https://opendata.cwb.gov.tw/api/v1/rest/datastore/{0}?locationName={1}&elementName={2}&sort={3}&Authorization={4}'.format("F-D0047-007",location,"","time",CWB_API_Key))
@@ -224,7 +225,9 @@ def aWeekRiskAssessment(location, hazardScale, riskLight_realTime):
     data=list(filter(lambda x: x['startTime'][5:10]!=now_day , i["time"]))
     for j in data:
       rawData[name].append(float(j["elementValue"][0]["value"]))
-  # print (rawData)
+      rawData["MN"].append(int(j['endTime'][5:7]))
+      rawData["HR"].append(int(j['endTime'][11:13])-6)
+  # print (rawData) # 'MinT', 'MaxT', 'RH', 'WS', 'Water_storage'
   
   indoorData = indoorClimateDataEstimation("aWeek",rawData)
   # 乾旱評估，分析水塔蓄水量變化
@@ -344,6 +347,7 @@ def aWeekRiskAssessment(location, hazardScale, riskLight_realTime):
   return riskLight
 
 def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek):
+  first_month = 5 # May
   num_of_days=[31,28,31,30,31,30,31,31,30,31,30,31]
   P = {"TEMP":[[20,50,30],[10,60,30],[10,50,40]], "PRCP":[[40,40,20],[30,50,20],[20,60,20]]} # May to July data update at 2021/04/30
   rawData={"date":[],"TEMP":[],"PRCP":[]}
@@ -395,7 +399,7 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek):
   generatedData = {"TEMP":[[],[],[]], "PRCP":[[],[],[]]} # 3 month
   mean = {"TEMP":[], "PRCP":[]} # 3 month, daily for TEMP and monthly for PRCP
   std = {"TEMP":[], "PRCP":[]} # 3 month, daily for TEMP and monthly for PRCP
-  for i in range(4,7,1): # May~July
+  for i in range(first_month-1, first_month+2,1): # May~July
     ecdf_TEMP=ECDF(DataArray_month[1][i]) 
     ecdf_PRCP=ECDF(DataArray_month[2][i]) 
 
@@ -450,12 +454,14 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek):
     mean["PRCP"].append(np.mean(generatedData["PRCP"][i-4]))
     std["PRCP"].append(np.std(generatedData["PRCP"][i-4],ddof=1))
   # print(generatedData)
-  P66_range = {'TEMP':[], 'PRCP':[]}
+  P66_range = {'TEMP':[], 'PRCP':[], 'MN':[]}
   for i in range(3):
     P66_range['TEMP'].append([mean['TEMP'][i]-std['TEMP'][i], mean['TEMP'][i]+std['TEMP'][i]])
     P66_range['PRCP'].append([max(0,mean['PRCP'][i]-std['PRCP'][i]), mean['PRCP'][i]+std['PRCP'][i]])
-  
-  # print(P66_range)
+    P66_range['MN'].append([first_month+i, first_month+i])
+
+  P66_range = indoorClimateDataEstimation("seasonalLongTerm", P66_range)
+  # print(P66_range) # 'TEMP', 'PRCP'
   risk = {"MinT":[],"MaxT":[],"Water_Demand":[]} # 3 month
   riskLight={"低溫":[],"高溫":[],"乾旱":[]} # 3 month
   corrFactor = {"MinT":"AirTC_Avg","MaxT":"AirTC_Avg","Water_Demand":"Water_Demand"} #climate factor and risk factor corresponding
@@ -617,9 +623,9 @@ def climateChangeRiskAssessment(hazardScale):
     historical_std["PRCP"].append(np.std(monthly_PRCP[i],ddof=1))
 
   generatedData = {
-    'ssp126':{'time': [], 'TEMP': [], 'PRCP': []}, 
-    'ssp245':{'time': [], 'TEMP': [], 'PRCP': []}, 
-    'ssp585':{'time': [], 'TEMP': [], 'PRCP': []}
+    'ssp126':{'time': [], 'TEMP': [], 'PRCP': [], 'MN': []}, 
+    'ssp245':{'time': [], 'TEMP': [], 'PRCP': [], 'MN': []}, 
+    'ssp585':{'time': [], 'TEMP': [], 'PRCP': [], 'MN': []}
   }
   scenarios = ['ssp126', 'ssp245', 'ssp585']
   tas = AR6_CDS_GCM.main(argv=['./climateChange_data/CMIP6/tas_Amon_HadGEM3-GC31-LL_historical_r1i1p1f3_gn_19010116-20141216.nc',[1996,2015], 'tas']) # argv = [file_path, [start_year, end_year]]
@@ -669,13 +675,17 @@ def climateChangeRiskAssessment(hazardScale):
       generatedData[i]['time'].append(forecast_tas['time'][j])
       generatedData[i]['TEMP'].append(((forecast_tas['value'][j]-baseline_mean['TEMP'][j%12])/baseline_std['TEMP'][j%12])*historical_std['TEMP'][j%12]+historical_mean['TEMP'][j%12])
       generatedData[i]['PRCP'].append(((forecast_pr['value'][j]-baseline_mean['PRCP'][j%12])/baseline_std['PRCP'][j%12])*historical_std['PRCP'][j%12]+historical_mean['PRCP'][j%12])
-  
+      generatedData[i]['MN'].append((j%12)+1)
+
     for j in range(480):
       f = open('./climateChange_data/weatherGeneration_monthly_{0}.csv'.format(i), 'w')
       f.write('{0},{1},{2}\n'.format(generatedData[i]['time'][j], generatedData[i]['TEMP'][j], generatedData[i]['PRCP'][j]))
       f.close()
-  # print(generatedData)
+  # print(generatedData) # 'TEMP', 'PRCP'
   # print(hazardScale)
+
+  generatedData = indoorClimateDataEstimation("climateChange", generatedData)
+
   risk = {
     'ssp126':{"MinT":[],"MaxT":[],"Water_Demand":[]},
     'ssp245':{"MinT":[],"MaxT":[],"Water_Demand":[]},
@@ -850,8 +860,291 @@ def operationAssessment(timeScale,riskLight):
 
 def indoorClimateDataEstimation(timescale,data):
 
-  return data
+  aWeek_weights = {
+    'MinT':{
+      'MinT': [-2.21106665e-01, 1.15090587e+00],
+      'HR': [-1.56657910e+01, -4.19990965e-03],
+      'MN': [-7.24721046e+00, -9.09076293e-02],
+      'RH':[3.02289382e+00, -2.81975878e-02],
+      'WS':[-1.02510753e+01, 1.47904145e-01],
+    },  
+    # [-2.21106665e-01  1.15090587e+00 -1.56657910e+01 -4.19990965e-03 -7.24721046e+00 -9.09076293e-02  3.02289382e+00 -2.81975878e-02 -1.02510753e+01  1.47904145e-01]
+    'MaxT':{
+      'MinT': [-2.21106665e-01, 1.15090587e+00],
+      'HR': [-1.56657910e+01, -4.19990965e-03],
+      'MN': [-7.24721046e+00, -9.09076293e-02],
+      'RH':[3.02289382e+00, -2.81975878e-02],
+      'WS':[-1.02510753e+01, 1.47904145e-01],
+    },
+  }
+  seasonalLongTerm_weights = {
+    'TEMP':{
+      'TEMP': [-4.3154551, 0.9343015],
+      'MN': [3.8008508, 0.05959764]
+    }, # [-4.3154551   0.9343015   3.8008508   0.05959764]
+  }
+  climateChange_weights = {
+    'TEMP':{
+      'TEMP': [-4.3154551, 0.9343015],
+      'MN': [3.8008508, 0.05959764]
+    },
+  }
 
+  new_data = {}
+
+  def findingWeights():
+    indoorDataScheme = open('./realTime_IoT_data/indoorClimateData/indoorClimateData_scheme.txt', 'r')
+    dataLabel_indoor = indoorDataScheme.readline().split(',')
+    indoorDataScheme.close()
+    outdoorDataScheme = open ('./realTime_IoT_data/outdoorClimateData/outdoorClimateData_scheme.txt', 'r')
+    dataLabel_outdoor = outdoorDataScheme.readline().split(',')
+    outdoorDataScheme.close()
+    indoorData_f = open('./realTime_IoT_data/indoorClimateData/testdata_indoor.txt', 'rb')
+    indoorData = indoorData_f.readlines()
+    indoorData_f.close()
+    outdoorData_f = open('./realTime_IoT_data/outdoorClimateData/testdata_outdoor.txt', 'rb')
+    outdoorData = outdoorData_f.readlines()
+    outdoorData_f.close()
+
+    start_time = ''
+    indoor_starter=0
+    outdoor_starter=0
+    for i in range(len(outdoorData)):
+      if str(indoorData[1]).split(',')[0] == str(outdoorData[i]).split(',')[0]:
+        start_time = str(outdoorData[i]).split(',')[0]
+        indoor_starter = 1
+        outdoor_starter = i
+    if start_time == '':
+      for i in range(len(indoorData)):
+        if str(outdoorData[1]).split(',')[0] == str(indoorData[i]).split(',')[0]:
+          start_time = str(indoorData[i]).split(',')[0]
+          indoor_starter = i
+          outdoor_starter = 1
+  
+
+    # print(int(start_time[2:].replace(' ','').replace(':','').replace('-','').replace('"','')))
+    
+    # print(indoor_starter)
+    # print(outdoor_starter)
+    j = outdoor_starter
+    indoor_data = {'TIMESTAMP': [], 'AirTC_Avg':[]}
+    outdoor_data = {'TIMESTAMP': [],'AirTC_Avg':[], 'RH':[], 'WS':[], 'MN':[],'HR':[]}
+    for i in range(indoor_starter,len(indoorData),1):
+      # print(str(indoorData[i]).split(',')[0])
+      # print(str(outdoorData[j]).split(',')[0])
+      if str(indoorData[i]).split(',')[0] == str(outdoorData[j]).split(',')[0]:
+        if str(indoorData[i]).split(',')[dataLabel_indoor.index('AirTC_Avg')] == '"NAN"' or str(outdoorData[j]).split(',')[dataLabel_outdoor.index('AirTC_Avg')] == '"NAN"' or str(outdoorData[j]).split(',')[dataLabel_outdoor.index('RH')] == '"NAN"' or str(outdoorData[j]).split(',')[dataLabel_outdoor.index('WS_ms_Avg')] == '"NAN"':
+          continue
+        else:
+          indoor_data['TIMESTAMP'].append(str(indoorData[i]).split(',')[dataLabel_indoor.index('TIMESTAMP')])
+          indoor_data['AirTC_Avg'].append(str(indoorData[i]).split(',')[dataLabel_indoor.index('AirTC_Avg')])
+          outdoor_data['TIMESTAMP'].append(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('TIMESTAMP')])
+          outdoor_data['AirTC_Avg'].append(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('AirTC_Avg')])
+          outdoor_data['RH'].append(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('RH')])
+          outdoor_data['WS'].append(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('WS_ms_Avg')])
+          outdoor_data['MN'].append(int(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('TIMESTAMP')][8:10]))
+          outdoor_data['HR'].append(int(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('TIMESTAMP')][14:16]))
+        if j == len(outdoorData):
+          break
+        j+=1
+      elif int(str(indoorData[i]).split(',')[0][2:].replace(' ','').replace(':','').replace('-','').replace('"',''))<int(str(outdoorData[j]).split(',')[0][2:].replace(' ','').replace(':','').replace('-','').replace('"','')):
+        continue
+      else:
+        while str(indoorData[i]).split(',')[0] != str(outdoorData[j]).split(',')[0]:
+          j+=1
+          if j == len(outdoorData):
+            break
+        if str(indoorData[i]).split(',')[dataLabel_indoor.index('AirTC_Avg')] == '"NAN"' or str(outdoorData[j]).split(',')[dataLabel_outdoor.index('AirTC_Avg')] == '"NAN"':
+          continue
+        else:
+          indoor_data['TIMESTAMP'].append(str(indoorData[i]).split(',')[dataLabel_indoor.index('TIMESTAMP')])
+          indoor_data['AirTC_Avg'].append(str(indoorData[i]).split(',')[dataLabel_indoor.index('AirTC_Avg')])
+          outdoor_data['TIMESTAMP'].append(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('TIMESTAMP')])
+          outdoor_data['AirTC_Avg'].append(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('AirTC_Avg')])
+          outdoor_data['RH'].append(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('RH')])
+          outdoor_data['WS'].append(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('WS_ms_Avg')])
+          outdoor_data['MN'].append(int(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('TIMESTAMP')][8:10]))
+          outdoor_data['HR'].append(int(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('TIMESTAMP')][14:16]))
+        if j == len(outdoorData):
+          break
+        j+=1
+
+    for i in range(len(indoor_data['AirTC_Avg'])):
+      indoor_data['AirTC_Avg'][i] = float(indoor_data['AirTC_Avg'][i])
+      outdoor_data['AirTC_Avg'][i] = float(outdoor_data['AirTC_Avg'][i])
+      outdoor_data['RH'][i] = float(outdoor_data['RH'][i])
+      outdoor_data['WS'][i] = float(outdoor_data['WS'][i])
+    
+    num_of_trainingData = len(indoor_data['AirTC_Avg'])-len(indoor_data['AirTC_Avg'])//5
+    print(num_of_trainingData)
+
+    # start GA optimization
+    desired_output = 0
+    def fitness_func_1(solution, solution_idx): # for seasonalLongTerm and climateChange
+      output = 0
+      fitness = []
+      # print(solution)
+      for i in range(1,num_of_trainingData,1):
+        # print(i)
+        output += ((outdoor_data['AirTC_Avg'][i]-solution[0])*solution[1]+(outdoor_data['MN'][i]-solution[2])*solution[3]-indoor_data['AirTC_Avg'][i])**2
+      fitness = 1.0 / np.abs(output - desired_output)
+      print(fitness)
+      return fitness
+
+    def fitness_func_2(solution, solution_idx):
+      output = 0
+      fitness = []
+      # print(solution)
+      for i in range(1,num_of_trainingData,1):
+        # print(i)
+        output += ((outdoor_data['AirTC_Avg'][i]-solution[0])*solution[1]+(outdoor_data['HR'][i]-solution[2])*solution[3]+(outdoor_data['MN'][i]-solution[4])*solution[5]+(outdoor_data['RH'][i]-solution[6])*solution[7]+(outdoor_data['WS'][i]-solution[8])*solution[9]-indoor_data['AirTC_Avg'][i])**2
+      fitness = 1.0 / np.abs(output - desired_output)
+      print(fitness)
+      return fitness
+    fitness_function = fitness_func_2
+
+    num_generations = 600
+    num_parents_mating = 4
+
+    sol_per_pop = 20
+    num_genes = 10 # 參數數量 4 or 10
+
+    init_range_low = -5
+    init_range_high = 5
+
+    parent_selection_type = "sss"
+    keep_parents = 1
+
+    crossover_type = "single_point"
+
+    mutation_type = "random"
+    mutation_percent_genes = 20
+
+    ga_instance = ga(num_generations=num_generations,
+      num_parents_mating=num_parents_mating,
+      fitness_func=fitness_function,
+      sol_per_pop=sol_per_pop,
+      num_genes=num_genes,
+      init_range_low=init_range_low,
+      init_range_high=init_range_high,
+      parent_selection_type=parent_selection_type,
+      keep_parents=keep_parents,
+      crossover_type=crossover_type,
+      mutation_type=mutation_type,
+      mutation_percent_genes=mutation_percent_genes)
+
+    ga_instance.run()
+
+    solution, solution_fitness, solution_idx = ga_instance.best_solution()
+    print("Parameters of the best solution : {solution}".format(solution=solution))
+    print("Fitness value of the best solution = {solution_fitness}".format(solution_fitness=solution_fitness))
+
+    bias_mean = 0
+    # f = open('./realTime_IoT_data/data_test.csv', 'w')
+    f = open('./realTime_IoT_data/data_test_2.csv', 'w')
+    for i in range(num_of_trainingData, len(indoor_data['AirTC_Avg']), 1):
+      # value = (outdoor_data['AirTC_Avg'][i]-solution[0])*solution[1]+(outdoor_data['MN'][i]-solution[2])*solution[3]
+      value_2 = (outdoor_data['AirTC_Avg'][i]-solution[0])*solution[1]+(outdoor_data['HR'][i]-solution[2])*solution[3]+(outdoor_data['MN'][i]-solution[4])*solution[5]+(outdoor_data['RH'][i]-solution[6])*solution[7]+(outdoor_data['WS'][i]-solution[8])*solution[9]
+      # bias = np.abs(value-indoor_data['AirTC_Avg'][i])
+      bias = np.abs(value_2-indoor_data['AirTC_Avg'][i])
+      bias_mean += bias**2
+      # f.write('{0},{1},{2},{3},{4}\n'.format(outdoor_data['TIMESTAMP'][i], float(indoor_data['AirTC_Avg'][i]), value, bias, outdoor_data['MN'][i]))
+      f.write('{0},{1},{2},{3},{4},{5},{6}.{7}\n'.format(outdoor_data['TIMESTAMP'][i], float(indoor_data['AirTC_Avg'][i]), value_2, bias, outdoor_data['HR'][i], outdoor_data['MN'][i], outdoor_data['RH'][i], outdoor_data['WS'][i]))
+    f.close()
+
+    bias_mean = (bias_mean/(len(indoor_data['AirTC_Avg'])-num_of_trainingData))**0.5
+    print(bias_mean) #bias_mean_1 = 2.570,  bias_mean_2 = 2.339
+
+  # print(data)
+  
+  def estimate_indoorData():
+    if timescale == 'aWeek':
+      for i in data.keys():
+        if i in aWeek_weights.keys():
+          new_data[i] = []
+          for j in range(len(data[i])):
+            new_data[i].append(0)
+            for k in aWeek_weights[i].keys():
+              new_data[i][j] += (data[k][j]-aWeek_weights[i][k][0])*aWeek_weights[i][k][1]
+        elif i != 'HR' and i != 'MN': # 'HR' and 'MN' are for correction only
+          new_data[i] = data[i]
+    elif timescale == 'seasonalLongTerm':
+      for i in data.keys():
+        if i in seasonalLongTerm_weights.keys():
+          new_data[i] = []
+          for j in range(len(data[i])):
+            new_data[i].append([])
+            new_data[i][j].append(0)
+            new_data[i][j].append(0)
+            for k in seasonalLongTerm_weights[i].keys():
+              new_data[i][j][0] += (data[k][j][0]-seasonalLongTerm_weights[i][k][0])*seasonalLongTerm_weights[i][k][1]
+              new_data[i][j][1] += (data[k][j][1]-seasonalLongTerm_weights[i][k][0])*seasonalLongTerm_weights[i][k][1]
+        elif i != 'MN': # 'HR' and 'MN' are for correction only
+          new_data[i] = data[i]
+    elif timescale == 'climateChange':
+      for s  in data.keys():
+        new_data[s] = {}
+        for i in data[s].keys():
+              if i in climateChange_weights.keys():
+                new_data[s][i] = []
+                for j in range(len(data[s][i])):
+                  new_data[s][i].append(0)
+                  for k in climateChange_weights[i].keys():
+                    new_data[s][i][j] += (data[s][k][j]-climateChange_weights[i][k][0])*climateChange_weights[i][k][1]
+              elif i != 'MN': # 'HR' and 'MN' are for correction only
+                new_data[s][i] = data[s][i]
+
+  # findingWeights()
+  estimate_indoorData()
+  return new_data
+
+def testGA():
+  function_inputs = [4,-2,3.5,5,-11,-4.7]
+  desired_output = 44
+  def fitness_func(solution, solution_idx):
+    output = np.sum(solution*function_inputs)
+    fitness = 1.0 / np.abs(output - desired_output)
+    return fitness
+  fitness_function = fitness_func
+
+  num_generations = 50
+  num_parents_mating = 4
+
+  sol_per_pop = 8
+  num_genes = len(function_inputs)
+
+  init_range_low = -2
+  init_range_high = 5
+
+  parent_selection_type = "sss"
+  keep_parents = 1
+
+  crossover_type = "single_point"
+
+  mutation_type = "random"
+  mutation_percent_genes = 10
+
+  ga_instance = ga(num_generations=num_generations,
+    num_parents_mating=num_parents_mating,
+    fitness_func=fitness_function,
+    sol_per_pop=sol_per_pop,
+    num_genes=num_genes,
+    init_range_low=init_range_low,
+    init_range_high=init_range_high,
+    parent_selection_type=parent_selection_type,
+    keep_parents=keep_parents,
+    crossover_type=crossover_type,
+    mutation_type=mutation_type,
+    mutation_percent_genes=mutation_percent_genes)
+
+  ga_instance.run()
+
+  solution, solution_fitness, solution_idx = ga_instance.best_solution()
+  print("Parameters of the best solution : {solution}".format(solution=solution))
+  print("Fitness value of the best solution = {solution_fitness}".format(solution_fitness=solution_fitness))
+
+  prediction = np.sum(np.array(function_inputs)*solution)
+  print("Predicted output based on the best solution : {prediction}".format(prediction=prediction))
 
 def main():
   operationalSuggestion={}
@@ -875,5 +1168,7 @@ def main():
   climateChangehazardScale = getHazardScale(crop, "", "climateChange")
   riskLight_climateChange = climateChangeRiskAssessment(climateChangehazardScale)
   operationalSuggestion["climateChange"]=operationAssessment("climateChange",riskLight_climateChange)
-
+  
+  # indoorClimateDataEstimation('test',{})
+  # testGA()
 main()
