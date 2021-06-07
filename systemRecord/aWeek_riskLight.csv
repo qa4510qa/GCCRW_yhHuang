@@ -14,3 +14,27 @@ Time,Hazard,1天後_day,1天後_night,2天後_day,2天後_night,3天後_day,3天
 2021-06-07 16:49,高濕,orange,orange,orange,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
 2021-06-07 16:49,強風,green,green,green,green,green,green,green,green,green,green,green,green
 2021-06-07 16:49,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-07 22:23,高溫,green,yellow,green,yellow,green,yellow,green,yellow,green,yellow,green,orange,yellow,orange
+2021-06-07 22:23,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-07 22:23,高濕,orange,red,orange,orange,orange,orange,orange,orange,orange,orange,orange,orange,yellow,orange
+2021-06-07 22:23,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-07 22:23,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-07 22:24,高溫,green,yellow,green,orange,green,yellow,green,orange,green,orange,green,orange,green,orange
+2021-06-07 22:24,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-07 22:24,高濕,orange,orange,orange,orange,yellow,orange,yellow,orange,yellow,orange,orange,orange,orange,orange
+2021-06-07 22:24,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-07 22:24,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-07 22:32,高溫,green,yellow,green,yellow,green,orange,green,yellow,yellow,orange,green,yellow,green,yellow,green
+2021-06-07 22:32,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-07 22:32,高濕,orange,orange,red,yellow,orange,yellow,orange,yellow,orange,orange,orange,orange,orange,yellow,orange
+2021-06-07 22:32,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-07 22:32,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-07 22:35,高溫,green,yellow,green,yellow,green,orange,green,orange,green,yellow,green,yellow,green,yellow,green
+2021-06-07 22:35,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-07 22:35,高濕,red,orange,red,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,orange,orange
+2021-06-07 22:35,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-07 22:35,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green

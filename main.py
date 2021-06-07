@@ -23,6 +23,8 @@ now = datetime.now()
 fuzzyRange = {"AirTC_Avg":1, "RH":5, "PAR_Avg":50, "VW_F_Avg":5, "WS_ms_Avg":3, "Water_Demand":0}
 riskScale = ["very_low","low","slightly_low","proper","slightly_high","high","very_high"]
 riskLightScale = ["red","orange","yellow","green","yellow","orange","red"]
+num_of_days=[31,28,31,30,31,30,31,31,30,31,30,31]
+
 
 def getHazardScale(crop, growthStage, timeScale):
   hazardScale = {} #{[stage]:{[climateFactor]:[value]}}
@@ -345,10 +347,7 @@ def aWeekRiskAssessment(location, hazardScale, riskLight_realTime):
   f.close()
   return riskLight
 
-def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek):
-  first_month = 6 # June
-  num_of_days=[31,28,31,30,31,30,31,31,30,31,30,31]
-  P = {"TEMP":[[10,50,40],[0,50,50],[0,50,50]], "PRCP":[[30,50,20],[30,50,20],[30,50,20]]} # June to August data update at 2021/04/30, [偏低, 正常, 偏高]
+def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek, P, first_month):
   rawData={"date":[],"TEMP":[],"PRCP":[]}
   DataArray_month = [[],[],[]] # month,TEMP,PRCP
   IsPRCPZeroRate=[] # PRCP
@@ -540,7 +539,6 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek):
   return riskLight 
 
 def climateChangeRiskAssessment(hazardScale):
-  num_of_days=[31,28,31,30,31,30,31,31,30,31,30,31]
   rawData={"date":[],"TEMP":[],"PRCP":[]}
   DataArray_month = [[],[],[],[]] # month,TEMP,PRCP,date
   monthly_PRCP = [] # monthly PRCP
@@ -1191,10 +1189,27 @@ def testGA():
 
 def main():
   operationalSuggestion={}
+  seasonalLongTerm_P = {}
   with open ('./inputData.txt', 'r') as inputData:
     location = inputData.readline().split(':')[1].replace("\n", "")
     crop = inputData.readline().split(':')[1].replace("\n", "")
     growthStage = inputData.readline().split(':')[1].replace("\n", "").split(',')
+    P = inputData.readline().split('],[')
+    seasonalLongTerm_P["TEMP"] = [[],[],[]]
+    seasonalLongTerm_P["TEMP"][0] = P[0].split('[[')[1].split(',')
+    seasonalLongTerm_P["TEMP"][1] = P[1].split(',')
+    seasonalLongTerm_P["TEMP"][2] = P[2].split(']]')[0].split(',')
+    P = inputData.readline().split('],[')
+    seasonalLongTerm_P["PRCP"] = [[],[],[]]
+    seasonalLongTerm_P["PRCP"][0] = P[0].split('[[')[1].split(',')
+    seasonalLongTerm_P["PRCP"][1] = P[1].split(',')
+    seasonalLongTerm_P["PRCP"][2] = P[2].split(']]')[0].split(',')
+    for i in seasonalLongTerm_P:
+      for j in seasonalLongTerm_P[i]:
+        j[0] = int(j[0])
+        j[1] = int(j[1])
+        j[2] = int(j[2])
+    first_month = int(inputData.readline().split(':')[1].split('#')[0])
 
   realTimehazardScale = getHazardScale(crop, growthStage[0], "realTime")
   riskLight_realTime = realTimeRiskAssessment(realTimehazardScale)
@@ -1205,7 +1220,7 @@ def main():
   operationalSuggestion["aWeek"]=operationAssessment("aWeek",riskLight_aWeek)
 
   seasonalLongTermhazardScale = getHazardScale(crop, growthStage, "seasonalLongTerm")
-  riskLight_seasonalLongTerm = seasonalLongTermRiskAssessment(seasonalLongTermhazardScale, riskLight_aWeek)
+  riskLight_seasonalLongTerm = seasonalLongTermRiskAssessment(seasonalLongTermhazardScale, riskLight_aWeek, seasonalLongTerm_P, first_month)
   operationalSuggestion["seasonalLongTerm"]=operationAssessment("seasonalLongTerm",riskLight_seasonalLongTerm)
 
   climateChangehazardScale = getHazardScale(crop, "", "climateChange")
