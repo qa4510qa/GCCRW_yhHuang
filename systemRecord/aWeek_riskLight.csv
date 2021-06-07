@@ -1,0 +1,16 @@
+Time,Hazard,1天後_day,1天後_night,2天後_day,2天後_night,3天後_day,3天後_night,4天後_day,4天後_night,5天後_day,5天後_night,6天後_day,6天後_night,7天後_day,7天後_night
+2021-06-07 16:05,高溫,green,orange,green,yellow,yellow,orange,green,yellow,green,yellow,yellow,yellow,,
+2021-06-07 16:05,低溫,green,green,green,green,green,green,green,green,green,green,green,green,,
+2021-06-07 16:05,高濕,orange,orange,orange,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,,
+2021-06-07 16:05,強風,green,green,green,green,green,green,green,green,green,green,green,green,,
+2021-06-07 16:05,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-07 16:05,高溫,green,yellow,green,yellow,green,orange,yellow,yellow,green,yellow,green,orange,,
+2021-06-07 16:05,低溫,green,green,green,green,green,green,green,green,green,green,green,green,,
+2021-06-07 16:05,高濕,orange,orange,orange,orange,orange,orange,yellow,orange,orange,orange,orange,orange,,
+2021-06-07 16:05,強風,green,green,green,green,green,green,green,green,green,green,green,green,,
+2021-06-07 16:05,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-07 16:49,高溫,green,orange,green,yellow,green,orange,green,orange,yellow,orange,green,orange
+2021-06-07 16:49,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-07 16:49,高濕,orange,orange,orange,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-07 16:49,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-07 16:49,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
