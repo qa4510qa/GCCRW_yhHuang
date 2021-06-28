@@ -1,5 +1,5 @@
 {
-    "WDPath": "./MultiWG-main/MultiWG",
+    "WDPath": "./MultiWG/MultiWG",
     "StnID": [
         "C0C590"
     ],
@@ -7,7 +7,7 @@
         "C0C590": "C0C590.csv"
     },
     "ClimScenCsvFile": {
-        "C0C590": "Amon_CAMS-CSM1-0_ssp585_2050-2060.csv"
+        "C0C590": "historical.csv"
     },
     "Var": [
         "PP01",
@@ -15,7 +15,7 @@
     ],
     "P_Threshold": 0.01,
     "P_Distribution": "Auto",
-    "GenYear": 20,
+    "GenYear": 100,
     "Condition": true,
     "LeapYear": false,
     "Smooth": false,
