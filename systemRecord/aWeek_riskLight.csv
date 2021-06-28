@@ -38,3 +38,357 @@ Time,Hazard,1天後_day,1天後_night,2天後_day,2天後_night,3天後_day,3天
 2021-06-07 22:35,高濕,red,orange,red,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,orange,orange
 2021-06-07 22:35,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green,green
 2021-06-07 22:35,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-25 23:55,高溫,green,orange,yellow,orange,yellow,orange,yellow,orange,yellow,red,yellow,orange,yellow,red,yellow
+2021-06-25 23:55,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-25 23:55,高濕,yellow,yellow,yellow,yellow,yellow,green,yellow,green,yellow,yellow,yellow,yellow,yellow,yellow,yellow
+2021-06-25 23:55,強風,green,green,green,green,yellow,green,green,green,green,green,green,yellow,green,green,green
+2021-06-25 23:55,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-25 23:57,高溫,green,orange,yellow,orange,yellow,red,yellow,red,yellow,orange,yellow,orange,yellow,orange,yellow
+2021-06-25 23:57,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-25 23:57,高濕,orange,green,yellow,green,yellow,green,yellow,green,yellow,yellow,yellow,yellow,orange,yellow,yellow
+2021-06-25 23:57,強風,green,green,green,green,green,yellow,green,green,green,green,green,yellow,green,green,green
+2021-06-25 23:57,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-25 23:57,高溫,green,orange,yellow,orange,yellow,red,yellow,red,yellow,red,yellow,orange,yellow,orange,yellow
+2021-06-25 23:57,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-25 23:57,高濕,orange,yellow,yellow,yellow,yellow,yellow,yellow,green,yellow,green,yellow,yellow,yellow,yellow,orange
+2021-06-25 23:57,強風,green,green,green,green,green,yellow,green,yellow,green,green,green,yellow,green,green,green
+2021-06-25 23:57,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 14:27,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 14:27,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 14:27,高濕,yellow,yellow,yellow,yellow,green,yellow,green,yellow,yellow,yellow,yellow,yellow
+2021-06-26 14:27,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 14:27,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 14:33,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 14:33,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 14:33,高濕,green,yellow,yellow,yellow,green,yellow,yellow,yellow,yellow,orange,yellow,yellow
+2021-06-26 14:33,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 14:33,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:05,高溫,yellow,orange,yellow,orange,yellow,red,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:05,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:05,高濕,yellow,yellow,yellow,yellow,green,yellow,green,yellow,yellow,yellow,green,yellow
+2021-06-26 16:05,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:05,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:07,高溫,yellow,orange,yellow,orange,yellow,red,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:07,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:07,高濕,green,yellow,green,yellow,green,yellow,green,yellow,yellow,yellow,yellow,yellow
+2021-06-26 16:07,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:07,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:07,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:07,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:07,高濕,yellow,yellow,green,yellow,yellow,yellow,green,yellow,yellow,yellow,yellow,yellow
+2021-06-26 16:07,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:07,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:08,高溫,yellow,orange,yellow,orange,yellow,red,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:08,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:08,高濕,yellow,yellow,yellow,yellow,green,green,green,yellow,yellow,yellow,yellow,yellow
+2021-06-26 16:08,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:08,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:08,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:08,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:08,高濕,green,yellow,yellow,yellow,yellow,green,green,yellow,green,yellow,yellow,yellow
+2021-06-26 16:08,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:08,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:09,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:09,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:09,高濕,green,yellow,green,yellow,green,green,green,yellow,yellow,yellow,green,orange
+2021-06-26 16:09,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:09,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:10,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:10,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:10,高濕,yellow,yellow,yellow,yellow,green,green,green,yellow,yellow,yellow,yellow,orange
+2021-06-26 16:10,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:10,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:13,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:13,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:13,高濕,yellow,yellow,green,yellow,green,yellow,yellow,yellow,yellow,yellow,yellow,yellow
+2021-06-26 16:13,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:13,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:14,高溫,yellow,orange,yellow,orange,yellow,red,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:14,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:14,高濕,yellow,yellow,green,yellow,green,yellow,yellow,yellow,yellow,orange,green,yellow
+2021-06-26 16:14,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:14,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:16,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:16,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:16,高濕,green,yellow,yellow,yellow,green,green,green,yellow,yellow,yellow,yellow,orange
+2021-06-26 16:16,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:16,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:18,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,red,yellow,orange,yellow,orange
+2021-06-26 16:18,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:18,高濕,yellow,yellow,green,yellow,green,green,yellow,yellow,yellow,yellow,yellow,yellow
+2021-06-26 16:18,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:18,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:19,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:19,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:19,高濕,yellow,yellow,yellow,yellow,green,green,yellow,yellow,yellow,yellow,yellow,orange
+2021-06-26 16:19,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:19,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:22,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:22,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:22,高濕,green,yellow,green,yellow,green,green,green,yellow,green,orange,green,yellow
+2021-06-26 16:22,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:22,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:23,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:23,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:23,高濕,yellow,yellow,yellow,yellow,green,yellow,green,yellow,yellow,yellow,yellow,yellow
+2021-06-26 16:23,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:23,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:23,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:23,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:23,高濕,green,yellow,yellow,yellow,green,green,green,yellow,yellow,yellow,green,orange
+2021-06-26 16:23,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:23,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:24,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:24,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:24,高濕,yellow,yellow,green,yellow,green,yellow,green,yellow,yellow,yellow,green,orange
+2021-06-26 16:24,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:24,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:25,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:25,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:25,高濕,yellow,yellow,yellow,yellow,yellow,yellow,green,yellow,yellow,orange,green,yellow
+2021-06-26 16:25,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:25,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:25,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:25,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:25,高濕,green,yellow,green,yellow,green,yellow,yellow,yellow,yellow,yellow,green,yellow
+2021-06-26 16:25,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:25,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:26,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:26,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:26,高濕,yellow,yellow,yellow,yellow,green,yellow,green,yellow,yellow,yellow,yellow,yellow
+2021-06-26 16:26,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:26,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:27,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:27,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:27,高濕,yellow,yellow,green,yellow,green,yellow,yellow,yellow,yellow,yellow,green,yellow
+2021-06-26 16:27,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:27,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:27,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:27,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:27,高濕,yellow,yellow,yellow,yellow,green,yellow,green,yellow,yellow,yellow,yellow,yellow
+2021-06-26 16:27,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:27,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:28,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:28,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:28,高濕,yellow,yellow,yellow,yellow,green,yellow,yellow,yellow,green,yellow,yellow,orange
+2021-06-26 16:28,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:28,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:29,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:29,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:29,高濕,yellow,yellow,green,yellow,green,yellow,yellow,yellow,yellow,orange,yellow,yellow
+2021-06-26 16:29,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:29,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:30,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:30,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:30,高濕,yellow,yellow,green,yellow,green,yellow,green,yellow,yellow,yellow,yellow,orange
+2021-06-26 16:30,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:30,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:34,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:34,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:34,高濕,yellow,orange,yellow,yellow,green,green,yellow,yellow,green,orange,green,orange
+2021-06-26 16:34,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:34,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:37,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:37,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:37,高濕,yellow,yellow,yellow,yellow,green,yellow,yellow,yellow,yellow,yellow,yellow,yellow
+2021-06-26 16:37,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:37,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:42,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:42,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:42,高濕,yellow,yellow,green,yellow,green,yellow,green,yellow,green,yellow,yellow,orange
+2021-06-26 16:42,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:42,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:43,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:43,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:43,高濕,yellow,yellow,yellow,yellow,green,yellow,yellow,yellow,yellow,orange,green,yellow
+2021-06-26 16:43,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:43,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:45,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:45,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:45,高濕,yellow,orange,green,yellow,green,yellow,green,yellow,yellow,yellow,yellow,yellow
+2021-06-26 16:45,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:45,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:45,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:45,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:45,高濕,yellow,yellow,yellow,yellow,green,green,green,yellow,yellow,yellow,yellow,orange
+2021-06-26 16:45,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:45,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 16:46,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 16:46,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:46,高濕,yellow,yellow,yellow,yellow,green,yellow,yellow,yellow,green,yellow,yellow,orange
+2021-06-26 16:46,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 16:46,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 17:35,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 17:35,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 17:35,高濕,yellow,yellow,green,yellow,green,yellow,green,yellow,yellow,yellow,yellow,orange
+2021-06-26 17:35,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 17:35,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 17:35,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 17:35,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 17:35,高濕,yellow,yellow,yellow,yellow,green,green,green,yellow,yellow,yellow,yellow,orange
+2021-06-26 17:35,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 17:35,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 17:36,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,red,yellow,orange,yellow,orange
+2021-06-26 17:36,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 17:36,高濕,yellow,yellow,green,yellow,green,yellow,yellow,yellow,yellow,orange,yellow,yellow
+2021-06-26 17:36,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 17:36,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 17:39,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 17:39,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 17:39,高濕,yellow,yellow,yellow,yellow,green,yellow,yellow,yellow,yellow,yellow,yellow,orange
+2021-06-26 17:39,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 17:39,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 17:40,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 17:40,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 17:40,高濕,yellow,yellow,yellow,yellow,green,yellow,green,yellow,green,orange,green,orange
+2021-06-26 17:40,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 17:40,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 17:41,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 17:41,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 17:41,高濕,green,orange,green,yellow,green,green,green,yellow,yellow,yellow,yellow,yellow
+2021-06-26 17:41,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 17:41,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 17:41,高溫,yellow,orange,yellow,orange,yellow,red,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 17:41,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 17:41,高濕,yellow,yellow,green,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow
+2021-06-26 17:41,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 17:41,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 17:42,高溫,yellow,orange,yellow,orange,yellow,red,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 17:42,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 17:42,高濕,yellow,yellow,yellow,yellow,green,yellow,yellow,yellow,green,yellow,green,yellow
+2021-06-26 17:42,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 17:42,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 17:45,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 17:45,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 17:45,高濕,yellow,yellow,green,yellow,green,green,green,yellow,yellow,yellow,yellow,yellow
+2021-06-26 17:45,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 17:45,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 17:51,高溫,yellow,orange,yellow,orange,yellow,red,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 17:51,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 17:51,高濕,yellow,yellow,yellow,yellow,green,yellow,yellow,yellow,yellow,yellow,green,orange,green,orange
+2021-06-26 17:51,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 17:51,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 22:49,高溫,yellow,orange,yellow,orange,yellow,red,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 22:49,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 22:49,高濕,yellow,yellow,green,yellow,green,yellow,yellow,yellow,yellow,yellow,yellow,yellow,green,orange
+2021-06-26 22:49,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 22:49,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 22:59,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 22:59,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 22:59,高濕,yellow,yellow,green,yellow,green,yellow,green,yellow,green,yellow,green,yellow,yellow,orange
+2021-06-26 22:59,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 22:59,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 23:01,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 23:01,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 23:01,高濕,yellow,yellow,yellow,yellow,green,yellow,green,yellow,yellow,yellow,yellow,yellow,yellow,orange
+2021-06-26 23:01,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 23:01,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 23:01,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 23:01,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 23:01,高濕,yellow,yellow,yellow,yellow,green,yellow,green,yellow,yellow,yellow,yellow,orange,yellow,yellow
+2021-06-26 23:01,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 23:01,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 23:02,高溫,yellow,orange,yellow,orange,yellow,red,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 23:02,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 23:02,高濕,yellow,yellow,green,yellow,green,yellow,yellow,yellow,yellow,yellow,yellow,yellow,green,orange
+2021-06-26 23:02,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 23:02,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 23:03,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 23:03,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 23:03,高濕,yellow,yellow,yellow,yellow,green,yellow,yellow,yellow,yellow,yellow,yellow,orange,yellow,yellow
+2021-06-26 23:03,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 23:03,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-26 23:04,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-26 23:04,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 23:04,高濕,yellow,yellow,yellow,yellow,green,yellow,green,yellow,yellow,yellow,yellow,orange,yellow,orange
+2021-06-26 23:04,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-26 23:04,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-27 16:48,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-27 16:48,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-27 16:48,高濕,yellow,yellow,green,yellow,green,yellow,yellow,yellow,yellow,yellow,yellow,orange
+2021-06-27 16:48,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-27 16:48,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-27 16:49,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-27 16:49,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-27 16:49,高濕,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,green,yellow,yellow,orange
+2021-06-27 16:49,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-27 16:49,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-27 16:52,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-27 16:52,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-27 16:52,高濕,yellow,yellow,yellow,yellow,green,yellow,yellow,yellow,yellow,orange,yellow,orange
+2021-06-27 16:52,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-27 16:52,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-27 16:53,高溫,yellow,orange,yellow,red,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-27 16:53,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-27 16:53,高濕,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,yellow,orange
+2021-06-27 16:53,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-27 16:53,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-27 20:27,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-27 20:27,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-27 20:27,高濕,yellow,yellow,yellow,yellow,yellow,orange,yellow,yellow,green,yellow,yellow,orange,yellow,orange
+2021-06-27 20:27,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-27 20:27,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-06-28 09:55,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-06-28 09:55,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-28 09:55,高濕,green,yellow,yellow,orange,yellow,yellow,green,yellow,yellow,yellow,yellow,orange
+2021-06-28 09:55,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-06-28 09:55,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green

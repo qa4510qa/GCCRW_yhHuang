@@ -28,3 +28,10 @@
 2021-06-07 22:24:{'ssp245_高溫': {'method': '長期投資規劃', 'risk_factor': 'Sensitivity', 'time': '40年內面臨危害'}, 'ssp585_高溫': {'method': '長期投資規劃', 'risk_factor': 'Sensitivity', 'time': '40年內面臨危害'}}
 2021-06-07 22:32:{'ssp245_高溫': {'method': '長期投資規劃', 'risk_factor': 'Sensitivity', 'time': '40年內面臨危害'}, 'ssp585_高溫': {'method': '長期投資規劃', 'risk_factor': 'Sensitivity', 'time': '40年內面臨危害'}}
 2021-06-07 22:35:{'ssp245_高溫': {'method': '長期投資規劃', 'risk_factor': 'Sensitivity', 'time': '40年內面臨危害'}, 'ssp585_高溫': {'method': '長期投資規劃', 'risk_factor': 'Sensitivity', 'time': '40年內面臨危害'}}
+2021-06-25 23:55:{'ssp245_高溫': {'method': '長期投資規劃', 'risk_factor': 'Sensitivity', 'time': '40年內面臨危害'}, 'ssp585_高溫': {'method': '長期投資規劃', 'risk_factor': 'Sensitivity', 'time': '40年內面臨危害'}, 'ssp119_高溫': {'method': '長期投資規劃', 'risk_factor': 'Sensitivity', 'time': '30年內面臨危害'}}
+2021-06-25 23:57:{'ssp245_高溫': {'method': '長期投資規劃', 'risk_factor': 'Sensitivity', 'time': '40年內面臨危害'}, 'ssp585_高溫': {'method': '長期投資規劃', 'risk_factor': 'Sensitivity', 'time': '40年內面臨危害'}}
+2021-06-27 15:05:{}
+2021-06-27 15:06:{}
+2021-06-27 15:08:{}
+2021-06-27 15:15:{}
+2021-06-27 15:20:{}

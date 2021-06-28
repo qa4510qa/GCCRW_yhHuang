@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys
 import os
+import json
 from os import listdir
 import numpy as np
 import pandas as pd
@@ -15,8 +16,12 @@ from datetime import date, datetime
 import matplotlib.pyplot as plt
 from statsmodels.distributions.empirical_distribution import ECDF
 import AR6_CDS_GCM
-
+import SDmodel_Sim1yr
+from importlib.machinery import SourceFileLoader
+import xlrd
+from openpyxl import Workbook
 # from statsmodels.distributions.empirical_distribution import ECDF
+
 CWB_API_Key = 'CWB-B7BC29A4-FADA-4DE6-9918-F2FA71A55F80'
 AGRi_API_ProjectKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwcm9qZWN0bmFtZSI6IlNETGFiX0lvVF9Qcm9qZWN0XzIwMjEiLCJuYW1lIjoicjA4NjIyMDA1IiwiaWF0IjoxNjEzNzk5Nzk2fQ.elm1KN4D7geluaVTrv-J9OoZ9aFEOFb-juiVfUrFQTc'
 now = datetime.now()
@@ -24,9 +29,11 @@ fuzzyRange = {"AirTC_Avg":1, "RH":5, "PAR_Avg":50, "VW_F_Avg":5, "WS_ms_Avg":3, 
 riskScale = ["very_low","low","slightly_low","proper","slightly_high","high","very_high"]
 riskLightScale = ["red","orange","yellow","green","yellow","orange","red"]
 num_of_days=[31,28,31,30,31,30,31,31,30,31,30,31]
+N = [10, 10, 11, 10, 10, 8, 10, 10, 11, 10, 10, 10, 10, 10, 11, 10, 10, 10, 10,
+     10, 11, 10, 10, 11, 10, 10, 10, 10, 10, 11, 10, 10, 10, 10, 10, 11]
 
 
-def getHazardScale(crop, growthStage, timeScale):
+def getHazardScale(crop, county, growthStage, timeScale):
   hazardScale = {} #{[stage]:{[climateFactor]:[value]}}
   if timeScale == "realTime":
     current_time = now.strftime("%H")
@@ -35,59 +42,71 @@ def getHazardScale(crop, growthStage, timeScale):
     else:
       conditionItem = growthStage + "_night" # get the objective condition for crop in such stage and time
 
-    with open('./cropClimateCondition/{0}/{1}.csv'.format(crop ,conditionItem), newline='') as csvfile:
+    with open('./conditionData/{0}ClimateCondition/{1}.csv'.format(crop ,conditionItem), newline='') as csvfile:
       rows = csv.reader(csvfile)
       for row in rows:
         if row[0] != '\ufeff':
           hazardScale[row[0]] = row[1:] 
   elif timeScale == "aWeek":
-    with open('./cropClimateCondition/{0}/{1}_day.csv'.format(crop ,growthStage), newline='') as csvfile:
+    with open('./conditionData/{0}ClimateCondition/{1}_day.csv'.format(crop ,growthStage), newline='') as csvfile:
       rows = csv.reader(csvfile)
       for row in rows:
         if row[0] != '\ufeff':
           hazardScale['{0}_day'.format(row[0])] = row[1:]
-    with open('./cropClimateCondition/{0}/{1}_night.csv'.format(crop ,growthStage), newline='') as csvfile:
+    with open('./conditionData/{0}ClimateCondition/{1}_night.csv'.format(crop ,growthStage), newline='') as csvfile:
       rows = csv.reader(csvfile)
       for row in rows:
         if row[0] != '\ufeff':
           hazardScale['{0}_night'.format(row[0])] = row[1:]
   elif timeScale == "seasonalLongTerm":
-    hazardScale = {'AirTC_Avg_day':[], 'AirTC_Avg_night':[], 'Water_Demand':[]}
+    hazardScale = {'AirTC_Avg_avg':[], 'SI':[]}
     for i in range(3): # 3 month
-      with open('./cropClimateCondition/{0}/{1}_day.csv'.format(crop ,growthStage[i]), newline='') as csvfile:
+      with open('./conditionData/{0}ClimateCondition/{1}_avg.csv'.format(crop ,growthStage[i]), newline='') as csvfile:
         rows = csv.reader(csvfile)
         for row in rows:
           if row[0] == 'AirTC_Avg':
-            hazardScale['AirTC_Avg_day'].append(row[1:])
-          elif row[0] == 'Water_Demand':
-            hazardScale['Water_Demand'].append(row[1:])
-      with open('./cropClimateCondition/{0}/{1}_night.csv'.format(crop ,growthStage[i]), newline='') as csvfile:
-        rows = csv.reader(csvfile)
-        for row in rows:
-          if row[0] == 'AirTC_Avg':
-            hazardScale['AirTC_Avg_night'].append(row[1:])
+            hazardScale['AirTC_Avg_avg'].append(row[1:])
+          elif row[0] == 'SI':
+            hazardScale['SI'].append(row[1:])
   elif timeScale == "climateChange":
-    files = listdir("./cropClimateCondition/{0}".format(crop))
-    for file in files:
-      if file[-3:] == 'csv':
-        with open('./cropClimateCondition/{0}/{1}'.format(crop ,file), newline='') as csvfile:
-          rows = csv.reader(csvfile)
-          for row in rows:
-            if row[0] != '\ufeff':
-              hazardScale['{0}_{1}_{2}'.format( file[:file.index('_')], row[0], file[file.index('_')+1:file.index('.')])] = row[1:]
+    hazardScale = {'nursery_AirTC_Avg_avg':[], 'flowering_AirTC_Avg_avg':[], 'SI':[]}
+    with open('./conditionData/{0}ClimateCondition/nursery_avg.csv'.format(crop), newline='') as csvfile:
+      rows = csv.reader(csvfile)
+      for row in rows:
+        if row[0] == 'AirTC_Avg':
+          hazardScale['nursery_AirTC_Avg_avg'] = row[1:]
+    with open('./conditionData/{0}ClimateCondition/flowering_avg.csv'.format(crop), newline='') as csvfile:
+      rows = csv.reader(csvfile)
+      for row in rows:
+        if row[0] == 'AirTC_Avg':
+          hazardScale['flowering_AirTC_Avg_avg'] = row[1:]
+    with open('./conditionData/{0}WRSCondition/allTime.csv'.format(county), newline='') as csvfile:
+      rows = csv.reader(csvfile)
+      for row in rows:
+        if row[0] == 'SI':
+          hazardScale['SI'] = row[1:]
+
+    # files = listdir("./conditionData/{0}ClimateCondition".format(crop))
+    # for file in files:
+    #   if file[-3:] == 'csv':
+    #     with open('./conditionData/{0}ClimateCondition/{1}'.format(crop ,file), newline='') as csvfile:
+    #       rows = csv.reader(csvfile)
+    #       for row in rows:
+    #         if row[0] != '\ufeff':
+    #           hazardScale['{0}_{1}_{2}'.format( file[:file.index('_')], row[0], file[file.index('_')+1:file.index('.')])] = row[1:]
   print('{0} hazardScale: {1}\n'.format(timeScale, hazardScale))
   return hazardScale
 
 def realTimeRiskAssessment(hazardScale):
   riskLight = {}
   
-  with open ('./realTime_IoT_data/indoorClimateData/indoorClimateData_scheme.txt', 'r') as indoorDataScheme:
+  with open ('./climateData/realTime_IoT_data/indoorClimateData/indoorClimateData_scheme.txt', 'r') as indoorDataScheme:
     dataLabel_indoor = indoorDataScheme.readline().split(',')
 
-  with open ('./realTime_IoT_data/outdoorClimateData/outdoorClimateData_scheme.txt', 'r') as outdoorDataScheme:
+  with open ('./climateData/realTime_IoT_data/outdoorClimateData/outdoorClimateData_scheme.txt', 'r') as outdoorDataScheme:
     dataLabel_outdoor = outdoorDataScheme.readline().split(',')
   
-  with open('./realTime_IoT_data/indoorClimateData/testdata_indoor.txt', 'rb') as indoorData:
+  with open('./climateData/realTime_IoT_data/indoorClimateData/testdata_indoor.txt', 'rb') as indoorData:
     line_indoor = indoorData.readline()
     off = -120
     while True:
@@ -98,7 +117,7 @@ def realTimeRiskAssessment(hazardScale):
         break
       off*=2 
 
-  with open('./realTime_IoT_data/outdoorClimateData/testdata_outdoor.txt', 'rb') as outdoorData:
+  with open('./climateData/realTime_IoT_data/outdoorClimateData/testdata_outdoor.txt', 'rb') as outdoorData:
     line_outdoor = outdoorData.readline()
     off = -120
     while True:
@@ -229,10 +248,10 @@ def aWeekRiskAssessment(location, hazardScale, riskLight_realTime):
   
   indoorData = indoorClimateDataEstimation("aWeek",rawData)
   # 乾旱評估，分析水塔蓄水量變化
-  with open ('./realTime_IoT_data/systemCapacityData/systemCapacityData_scheme.txt', 'r') as systemDataScheme:
+  with open ('./climateData/realTime_IoT_data/systemCapacityData/systemCapacityData_scheme.txt', 'r') as systemDataScheme:
     dataLabel_system = systemDataScheme.readline().split(',')
 
-  with open('./realTime_IoT_data/systemCapacityData/testdata_systemCapacity.txt', 'rb') as systemData:
+  with open('./climateData/realTime_IoT_data/systemCapacityData/testdata_systemCapacity.txt', 'rb') as systemData:
     line_system = systemData.readline()
     off = -120
     while True:
@@ -347,18 +366,23 @@ def aWeekRiskAssessment(location, hazardScale, riskLight_realTime):
   f.close()
   return riskLight
 
-def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek, P, first_month):
+def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek, P, first_month, localStnID, waterResourceSystemStnID):
   rawData={"date":[],"TEMP":[],"PRCP":[]}
   DataArray_month = [[],[],[]] # month,TEMP,PRCP
   IsPRCPZeroRate=[] # PRCP
-  historyData=open("./historyClimateData/climateData_daily_466920.csv","r")
-  line = historyData.readline()
-  for line in historyData:
+  historyData_local=open("./climateData/historyClimateData/climateData_daily_{0}.csv".format(localStnID),"r")
+  historyData_WRS=open("./climateData/historyClimateData/climateData_daily_{0}.csv".format(localStnID),"r")
+  line_local = historyData_local.readline()
+  line_WRS = historyData_WRS.readline()
+  for line in historyData_local:
     if line.split(',')[1] != "":
       rawData["date"].append(line.split(',')[1])
       rawData["TEMP"].append(line.split(',')[2])
-      rawData["PRCP"].append(line.split(',')[3])
   len_of_data = len(rawData["date"])
+
+  for line in historyData_WRS:
+    if line.split(',')[1] != "":
+      rawData["PRCP"].append(line.split(',')[3].replace('\n',''))
 
   for i in range(12):
     DataArray_month[0].append(str(i+1))
@@ -366,7 +390,7 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek, P, first_month)
     DataArray_month[2].append([])
 
   for i in range(len_of_data):
-    j=int(rawData["date"][i][4:6])
+    j=int(rawData["date"][i].split('/')[1])
     DataArray_month[1][j-1].append(rawData["TEMP"][i])
     DataArray_month[2][j-1].append(rawData["PRCP"][i])
 
@@ -390,6 +414,7 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek, P, first_month)
       for k in range(len(DataArray_month[i][j])):
         DataArray_month[i][j][k]=float(DataArray_month[i][j][k])
   generatedData = {"TEMP":[[],[],[]], "PRCP":[[],[],[]]} # 3 month
+  GWLFData = {"TEMP":[[],[],[]], "PRCP":[[],[],[]]}
   mean = {"TEMP":[], "PRCP":[]} # 3 month, daily for TEMP and monthly for PRCP
   std = {"TEMP":[], "PRCP":[]} # 3 month, daily for TEMP and monthly for PRCP
   for i in range(first_month-1, first_month+2,1):
@@ -421,43 +446,97 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek, P, first_month)
         t+=1
       generatedData["TEMP"][i-first_month+1].append(round(ecdf_TEMP.x[t]*1000)/1000)
 
-      PRCP_month = 0
-      for d in range(num_of_days[i]):
-        rand_PRCP = random.random()
-        if rand_PRCP<=P["PRCP"][i-first_month+1][0]:
-          Climate_ratio["PRCP"]=[0,0.3]
-        elif (rand_PRCP>P["PRCP"][i-first_month+1][0] and rand_PRCP<=P["PRCP"][i-first_month+1][1]):
-          Climate_ratio["PRCP"]=[0.3,0.7]
-        else :
-          Climate_ratio["PRCP"]=[0.7,1]
+      # PRCP_month = 0
+      # for d in range(num_of_days[i]):
+      #   rand_PRCP = random.random()
+      #   if rand_PRCP<=P["PRCP"][i-first_month+1][0]:
+      #     Climate_ratio["PRCP"]=[0,0.3]
+      #   elif (rand_PRCP>P["PRCP"][i-first_month+1][0] and rand_PRCP<=P["PRCP"][i-first_month+1][1]):
+      #     Climate_ratio["PRCP"]=[0.3,0.7]
+      #   else :
+      #     Climate_ratio["PRCP"]=[0.7,1]
       
-        IsPRCPZero = random.random() # determine dry day or wet day
-        if IsPRCPZero <= IsPRCPZeroRate[i]: 
-          PRCP_month+=0
-        else:
-          y=random.random()*(Climate_ratio["PRCP"][1]-Climate_ratio["PRCP"][0])+Climate_ratio["PRCP"][0]
-          t=0
-          while ecdf_PRCP.y[t]<y:
-            t+=1
-          PRCP_month+=round(ecdf_PRCP.x[t]*1000)/1000
-      generatedData["PRCP"][i-first_month+1].append(PRCP_month)
+      #   IsPRCPZero = random.random() # determine dry day or wet day
+      #   if IsPRCPZero <= IsPRCPZeroRate[i]: 
+      #     PRCP_month+=0
+      #   else:
+      #     y=random.random()*(Climate_ratio["PRCP"][1]-Climate_ratio["PRCP"][0])+Climate_ratio["PRCP"][0]
+      #     t=0
+      #     while ecdf_PRCP.y[t]<y:
+      #       t+=1
+      #     PRCP_month+=round(ecdf_PRCP.x[t]*1000)/1000
+      # generatedData["PRCP"][i-first_month+1].append(PRCP_month)
 
     mean["TEMP"].append(np.mean(generatedData["TEMP"][i-first_month+1]))
     std["TEMP"].append(np.std(generatedData["TEMP"][i-first_month+1],ddof=1))
-    mean["PRCP"].append(np.mean(generatedData["PRCP"][i-first_month+1]))
-    std["PRCP"].append(np.std(generatedData["PRCP"][i-first_month+1],ddof=1))
+   
+    for d in range(num_of_days[i]):
+      Climate_ratio={}
+      rand_TEMP = random.random()
+      if rand_TEMP<=P["TEMP"][i-first_month+1][0]:
+        Climate_ratio["TEMP"]=[0,0.3]
+      elif (rand_TEMP>P["TEMP"][i-first_month+1][0] and rand_TEMP<=P["TEMP"][i-first_month+1][1]):
+        Climate_ratio["TEMP"]=[0.3,0.7]
+      else :
+        Climate_ratio["TEMP"]=[0.7,1]
 
-  P66_range = {'TEMP':[], 'PRCP':[], 'MN':[]}
+      y=random.random()*(Climate_ratio["TEMP"][1]-Climate_ratio["TEMP"][0])+Climate_ratio["TEMP"][0]
+      t=0
+      while ecdf_TEMP.y[t]<y:
+        t+=1
+      GWLFData["TEMP"][i-first_month+1].append(ecdf_TEMP.x[t])
+
+      rand_PRCP = random.random()
+      if rand_PRCP<=P["PRCP"][i-first_month+1][0]:
+        Climate_ratio["PRCP"]=[0,0.3]
+      elif (rand_PRCP>P["PRCP"][i-first_month+1][0] and rand_PRCP<=P["PRCP"][i-first_month+1][1]):
+        Climate_ratio["PRCP"]=[0.3,0.7]
+      else :
+        Climate_ratio["PRCP"]=[0.7,1]
+    
+      IsPRCPZero = random.random() # determine dry day or wet day
+      if IsPRCPZero <= IsPRCPZeroRate[i]: 
+        GWLFData["PRCP"][i-first_month+1].append(0)
+      else:
+        y=random.random()*(Climate_ratio["PRCP"][1]-Climate_ratio["PRCP"][0])+Climate_ratio["PRCP"][0]
+        t=0
+        while ecdf_PRCP.y[t]<y:
+          t+=1
+        GWLFData["PRCP"][i-first_month+1].append(ecdf_PRCP.x[t])
+
+  P66_range = {'TEMP':[], 'MN':[]}
   for i in range(3):
     P66_range['TEMP'].append([mean['TEMP'][i]-std['TEMP'][i], mean['TEMP'][i]+std['TEMP'][i]])
-    P66_range['PRCP'].append([max(0,mean['PRCP'][i]-std['PRCP'][i]), mean['PRCP'][i]+std['PRCP'][i]])
     P66_range['MN'].append([first_month+i, first_month+i])
+
+  print(GWLFData['PRCP'])
+  print(GWLFData['TEMP'])
+  f = open('./GWLF/seasonalLongTerm_{0}.csv'.format(waterResourceSystemStnID), 'w')
+  f.write('Date,TX01,PP01\n')
+  for i in range(3):
+    for j in range(len(GWLFData["PRCP"][i])):
+      f.write('{0}/{1}/{2},{3},{4}\n'.format(now.strftime('%Y'),first_month+i,j+1,GWLFData["TEMP"][i][j],GWLFData["PRCP"][i][j]))
+  f.close()
 
   P66_range = indoorClimateDataEstimation("seasonalLongTerm", P66_range)
 
-  risk = {"MinT":[],"MaxT":[],"Water_Demand":[]} # 3 month
+  GWLF = SourceFileLoader("GWLF", "./GWLF/GWLF.py").load_module()
+  GWLF.main(argv=['./GWLF', './WthDATA/seasonalLongTerm_{0}.csv'.format(waterResourceSystemStnID),'./ParDATA/ShimenGWLFCalibrationPar.csv', 23.5, 0, 'y']) # ['workingDir', 'Tfilename', 'Pfilename', 'latitude', 'dz', 'Output the simulation result or not']
+  f = open("./GWLF/OUTPUT_10.csv", "r")
+  f_new = open("./GWLF/OUTPUT_10/seasonalLongTerm_{0}_Discharge_Shimen.csv".format(waterResourceSystemStnID), "w")
+  for line in f:
+    f_new.write(line)
+  f.close()
+  f_new.close()
+  # for i in range(3):
+  #   SD_1yrSim = SourceFileLoader("AgriHydro-master.AgriHydroPYFile", "./AgriHydro-master/AgriHydroPYFile/SDmodel_1yrSim.py").load_module()
+  #   SD_1yrSim.main(argv=['./GWLF', './WthDATA/{0}_{1}_{2}-{3}_{4}.csv'.format(g, s, 2020+j*10, 2020+(j+1)*10, StnID),'./ParDATA/ShimenGWLFCalibrationPar.csv', 23.5, 0, 'y']) # ['workingDir', 'Tfilename', 'Pfilename', 'latitude', 'dz', 'Output the simulation result or not']
+          
+
+
+  risk = {"MinT":[],"MaxT":[],"drought":[]} # 3 month
   riskLight={"低溫":[],"高溫":[],"乾旱":[]} # 3 month
-  corrFactor = {"MinT":"AirTC_Avg","MaxT":"AirTC_Avg","Water_Demand":"Water_Demand"} #climate factor and risk factor corresponding
+  corrFactor = {"MinT":"AirTC_Avg","MaxT":"AirTC_Avg","drought":"SI"} #climate factor and risk factor corresponding
   for i in risk.keys():
     for j in range(3):
       if i == 'MinT':
@@ -466,23 +545,10 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek, P, first_month)
       elif i == 'MaxT':
         hazardScaleItem = hazardScale["AirTC_Avg_day"][j]
         value = P66_range['TEMP'][j][1]
-      elif i == "Water_Demand":
-        hazardScaleItem = hazardScale["Water_Demand"][j]
-        t=0
-        while ecdf_PRCP.x[t]<P66_range['PRCP'][j][0]:
-          t+=1
-        if ecdf_PRCP.y[t]>0.4:                  # 使用降雨量與歷史降雨量比教作為乾旱判斷之依據
-          risk[i].append('proper')
-          continue
-        elif ecdf_PRCP.y[t]>0.3:
-          risk[i].append('slightly_low')
-          continue
-        elif ecdf_PRCP.y[t]>0.2:
-          risk[i].append('low')
-          continue
-        else:
-          risk[i].append('very_low')
-          continue
+      elif i == "drought":
+        break
+        hazardScaleItem = hazardScale["SI"][j]
+        
       for k in range(6):
         if hazardScaleItem[k]== '-':
           continue
@@ -518,27 +584,24 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek, P, first_month)
           riskLight["高溫"].append("green")
         else:
           riskLight["高溫"].append(riskLightScale[riskScale.index(risk[i][j])])
-      elif i == "Water_Demand":
-        if risk[i][j][-3:]=="igh":
-          riskLight["乾旱"].append("green")
-        else:
-          riskLight["乾旱"].append(riskLightScale[riskScale.index(risk[i][j])])
+      elif i == "drought":
+        break
   
-  if riskLight_aWeek["乾旱"][-2] == 'orange' or riskLight_aWeek["乾旱"][-2] == 'red':
-    riskLight["乾旱"][0] = riskLightScale[max(0,riskLightScale.index(riskLight["乾旱"][0])-1)]
+  # if riskLight_aWeek["乾旱"][-2] == 'orange' or riskLight_aWeek["乾旱"][-2] == 'red':
+  #   riskLight["乾旱"][0] = riskLightScale[max(0,riskLightScale.index(riskLight["乾旱"][0])-1)]
 
-  print('seasonalLongTerm riskLight:{0}\n'.format(riskLight))
-  f = open('./systemRecord/seasonalLongTerm_riskLight.csv', 'a')
-  f.write('\n')
-  for Hz in riskLight.keys():
-    f.write('{0},{1},{2},{3},{4},{5}\n'.format(now.strftime('%Y-%m-%d %H:%M'),first_month-1,Hz,riskLight[Hz][0],riskLight[Hz][1],riskLight[Hz][2]))
-  f.close()
-  f = open('./systemRecord/seasonalLongTerm_riskLight.txt', 'a')
-  f.write('{0}{1}\n'.format(now.strftime('%Y-%m-%d %H:%M'),riskLight))
-  f.close()
+  # print('seasonalLongTerm riskLight:{0}\n'.format(riskLight))
+  # f = open('./systemRecord/seasonalLongTerm_riskLight.csv', 'a')
+  # f.write('\n')
+  # for Hz in riskLight.keys():
+  #   f.write('{0},{1},{2},{3},{4},{5}\n'.format(now.strftime('%Y-%m-%d %H:%M'),first_month-1,Hz,riskLight[Hz][0],riskLight[Hz][1],riskLight[Hz][2]))
+  # f.close()
+  # f = open('./systemRecord/seasonalLongTerm_riskLight.txt', 'a')
+  # f.write('{0}{1}\n'.format(now.strftime('%Y-%m-%d %H:%M'),riskLight))
+  # f.close()
   return riskLight 
 
-def climateChangeRiskAssessment(hazardScale):
+def climateChangeRiskAssessment(hazardScale, GCM, scenarios, variant_id, localStnID, waterResourceSystemStnID, county, reservoirName, SDInitial):
   rawData={"date":[],"TEMP":[],"PRCP":[]}
   DataArray_month = [[],[],[],[]] # month,TEMP,PRCP,date
   monthly_PRCP = [] # monthly PRCP
@@ -546,19 +609,9 @@ def climateChangeRiskAssessment(hazardScale):
   IsPRCPZeroRate=[] # PRCP
   historical_mean = {"TEMP":[], "PRCP":[]} # 12 month, monthly for both
   historical_std = {"TEMP":[], "PRCP":[]}
-  GCM = ['Amon_HadGEM3-GC31-LL', 'Amon_MIROC6', 'Amon_CAMS-CSM1-0']
-  scenarios = {
-    'Amon_HadGEM3-GC31-LL': ['ssp126', 'ssp245', 'ssp585'],
-    'Amon_MIROC6': ['ssp119', 'ssp126', 'ssp245', 'ssp585'],
-    'Amon_CAMS-CSM1-0': ['ssp119', 'ssp126', 'ssp245', 'ssp585']
-  }
-  variant_id = {
-    'Amon_HadGEM3-GC31-LL': 'r1i1p1f3',
-    'Amon_MIROC6': 'r1i1p1f1',
-    'Amon_CAMS-CSM1-0': 'r1i1p1f1'
-  }
+
   def generate_historicalData_para():
-    historyData=open("./historyClimateData/climateData_daily_466920.csv","r")
+    historyData=open("./climateData/historyClimateData/climateData_daily_466920.csv","r")
     line = historyData.readline()
     for line in historyData:
       if line.split(',')[1] != "":
@@ -625,8 +678,8 @@ def climateChangeRiskAssessment(hazardScale):
       historical_std["PRCP"].append(np.std(monthly_PRCP[i],ddof=1))
   
   def generate_multiWG_para(GCM, scenarios, variant_id):
-    tas = AR6_CDS_GCM.main(argv=['./climateChange_data/CMIP6/tas_{0}_historical_{1}_gn_19960116-20141216.nc'.format(GCM, variant_id),[1996,2015], 'tas']).to_dict() # argv = [file_path, [start_year, end_year]]
-    pr = AR6_CDS_GCM.main(argv=['./climateChange_data/CMIP6/pr_{0}_historical_{1}_gn_19960116-20141216.nc'.format(GCM, variant_id),[1996,2015], 'pr']).to_dict()
+    tas = AR6_CDS_GCM.main(argv=['climateData/climateChange_data/CMIP6/tas_{0}_historical_{1}_gn_19960116-20141216.nc'.format(GCM, variant_id),[1996,2015], 'tas']).to_dict() # argv = [file_path, [start_year, end_year]]
+    pr = AR6_CDS_GCM.main(argv=['climateData/climateChange_data/CMIP6/pr_{0}_historical_{1}_gn_19960116-20141216.nc'.format(GCM, variant_id),[1996,2015], 'pr']).to_dict()
     tas_monthly_baseline = []
     pr_monthly_baseline = []
     for i in range(12): # 12 month
@@ -676,8 +729,8 @@ def climateChangeRiskAssessment(hazardScale):
         TEMP_std_ratio[i].append([]) 
         PRCP_avg_ratio[i].append([]) 
         PRCP_std_ratio[i].append([])    
-      tas = AR6_CDS_GCM.main(argv=['./climateChange_data/CMIP6/tas_{0}_{1}_{2}_gn_20210116-20601216.nc'.format(GCM, i, variant_id),[2021,2060], 'tas']).to_dict()
-      pr = AR6_CDS_GCM.main(argv=['./climateChange_data/CMIP6/pr_{0}_{1}_{2}_gn_20210116-20601216.nc'.format(GCM, i, variant_id),[2021,2160], 'pr']).to_dict()
+      tas = AR6_CDS_GCM.main(argv=['climateData/climateChange_data/CMIP6/tas_{0}_{1}_{2}_gn_20210116-20601216.nc'.format(GCM, i, variant_id),[2021,2060], 'tas']).to_dict()
+      pr = AR6_CDS_GCM.main(argv=['climateData/climateChange_data/CMIP6/pr_{0}_{1}_{2}_gn_20210116-20601216.nc'.format(GCM, i, variant_id),[2021,2160], 'pr']).to_dict()
       for item in tas['value'].keys():
         tas_monthly_forecast[int(tas['time'][item][5:7])-1].append(tas['value'][item]-272.15) # 轉成攝氏溫度
       for item in pr['value'].keys():
@@ -695,99 +748,231 @@ def climateChangeRiskAssessment(hazardScale):
           PRCP_std_ratio[i][j].append(forecast_std[i]['PRCP'][j][k]/baseline_std['PRCP'][j]) 
       
       for j in range(4):
-        f = open('./climateChange_data/multiWG_para/{0}_{1}_{2}-{3}.csv'.format(GCM, i, 2020+j*10, 2020+(j+1)*10), 'w')
+        f = open('./MultiWG/MultiWG/DATA/{0}_{1}_{2}-{3}.csv'.format(GCM, i, 2020+j*10, 2020+(j+1)*10), 'w')
         f.write('T_avg_delta,T_std_ratio,P_avg_ratio,P_std_ratio,Pw_ratio,Pwd_ratio,Pww_ratio\n')
         for k in range(12):
           f.write('{},{},{},{},1,1,1\n'.format(TEMP_avg_delta[i][k][j],TEMP_std_ratio[i][k][j],PRCP_avg_ratio[i][k][j],PRCP_std_ratio[i][k][j]))
         f.close()
 
-  
-  generate_historicalData_para() # 產製歷史統計參數
+  # generate_historicalData_para() # 產製歷史統計參數，自行產制統計特性之方法
   # for g in GCM:  # 產製multiWG需要的氣候變遷參數
   #   generate_multiWG_para(g, scenarios[g], variant_id[g])
  
+
+  def runMultiWG(GenYear, StnID, ClimScenCsvFile):
+    with open('./MultiWG/MultiWG/Setting.Json', newline='') as jsonfile:
+      data = json.load(jsonfile)
+
+    with open('./MultiWG/MultiWG/Setting.Json', 'w', newline='') as jsonfile:
+      data["StnID"] = [StnID]
+      data["WthObvCsvFile"] = {
+        str(StnID): "{0}.csv".format(str(StnID))
+      }
+      data["ClimScenCsvFile"] = {
+        str(StnID): ClimScenCsvFile
+      }
+      data["GenYear"] = GenYear
+      json.dump(data, jsonfile)
+    WG = SourceFileLoader("MultiWG.WG_SimpleRun", "./MultiWG/MultiWG/WG_SimpleRun.py").load_module()
+    WG.main(argv=['./MultiWG/MultiWG','n','y']) # ['workingDir', 'multi-site or not', 'output the validation result or not']
+
+  def generateGWLFDATA():
+    StnID = waterResourceSystemStnID # for drought use waterResourceSystemStnID
+    for g in GCM:
+      for s in scenarios[g]:
+        for j in range(4):
+          ClimScenCsvFile = '{0}_{1}_{2}-{3}.csv'.format(g, s, 2020+j*10, 2020+(j+1)*10)
+          # print('{0}_{1}_{2}-{3}_{4}.csv'.format(g, s, 2020+j*10, 2020+(j+1)*10, StnID))
+          print(ClimScenCsvFile)
+          runMultiWG(20, StnID, ClimScenCsvFile)
+          files = os.listdir('./MultiWG/MultiWG/OUT')
+          for file in files:
+            if '.csv' in file:
+              f = open("./MultiWG/MultiWG/OUT/{0}".format(file), "r")
+              f_new = open("./GWLF/DATA/WthDATA/{0}_{1}_{2}-{3}_{4}.csv".format(g, s, 2020+j*10, 2020+(j+1)*10, StnID), "w")
+              f.readline()
+              f_new.write('Date,PP01,TX01\n')
+              i = 0
+              for line in f:
+                l = line.split(',')
+                f_new.write('{0}/{1}/{2},{3},{4}\n'.format(2020+j*10+i, l[0].split('-')[1], l[0].split('-')[2], l[1], l[3]))
+                if l[0].split('-')[1]=='12' and l[0].split('-')[2]=='31':
+                  i+=1
+                  if i == 10:
+                    break
+              f.close()
+              f_new.close()
+            print("./MultiWG/MultiWG/OUT/{0}".format(file))
+            os.remove("./MultiWG/MultiWG/OUT/{0}".format(file))
+       
+  def runGWLF():
+    StnID = waterResourceSystemStnID # for drought use waterResourceSystemStnID
+    for g in GCM:
+      for s in scenarios[g]:
+        for j in range(4):
+          GWLF = SourceFileLoader("AgriHydro-master.GWLF", "./GWLF/GWLF.py").load_module()
+          GWLF.main(argv=['./GWLF', './WthDATA/{0}_{1}_{2}-{3}_{4}.csv'.format(g, s, 2020+j*10, 2020+(j+1)*10, StnID),'./ParDATA/ShimenGWLFCalibrationPar.csv', 23.5, 0, 'y']) # ['workingDir', 'Tfilename', 'Pfilename', 'latitude', 'dz', 'Output the simulation result or not']
+          f = open("./GWLF/OUTPUT_10.csv", "r")
+          f_new = open("./GWLF/OUTPUT_10/{0}_{1}_{2}-{3}_{4}_Discharge_Shimen.csv".format(g, s, 2020+j*10, 2020+(j+1)*10, StnID), "w")
+          for line in f:
+            f_new.write(line)
+          f.close()
+          f_new.close()
+  
+  def generateWRS_SI(g, s, j):
+    SI_output = open('./climateData/climateChange_data/WRS_SI/{0}_{1}_{2}-{3}_SI_{4}.csv'.format(g, s, 2020+j*10, 2020+(j+1)*10, county), 'w')
+    SI_output.write('Year, SI_Public, SI_AgriTao, SI_AgriShi\n')
+    SI_output.close()
+    reservoir_output = open('./climateData/climateChange_data/WRS_reservoir/{0}_{1}_{2}-{3}_reservoir_{4}.csv'.format(g, s, 2020+j*10, 2020+(j+1)*10, county), 'w')
+    reservoir_output.write('Year,ShiMen Reservoir,ZhongZhuang Adjustment Reservoir,ShiMen WPP Storage Pool\n')
+    reservoir_output.close()
+    discharge_data = open('./GWLF/OUTPUT_10/{0}_{1}_{2}-{3}_{4}_Discharge_{5}.csv'.format(g, s, 2020+j*10, 2020+(j+1)*10, waterResourceSystemStnID, reservoirName), 'r')
+    reservoir_discharge = discharge_data.readlines()
+    # discharge_1yr = reservoir_discharge[1:36+1]
+    # print(discharge_1yr)
+    SDInitial_1yr = SDInitial
+    for yr in range(10):
+      print(SDInitial_1yr)
+      discharge_1yr = reservoir_discharge[yr*36+1:yr*36+36+1]
+      inflow_template = xlrd.open_workbook('./SDmodel/SD_inputData/Data_inflow_template.xlsx')
+      workbook = Workbook()
+      inflow_newfile = workbook.active
+      sheet = inflow_template.sheet_by_index(0)
+      inflow_newfile.append(sheet.row_values(0))
+      for l in range(1,sheet.nrows,1):
+        # print(float(discharge_1yr[l-1].split(',')[1].replace('\n','')))
+        line = sheet.row_values(l)
+        line[2] = float(discharge_1yr[l-1].split(',')[1].replace('\n',''))*86400*N[l-1]
+        inflow_newfile.append(line)
+      # print(g,s,j,yr)
+      workbook.save("./SDmodel/SD_inputData/Data_inflow.xlsx")
+      filelist = ["./SDmodel/SD_inputData/Data_inflow.xlsx","./SDmodel/SD_inputData/Data_allocation_template.xlsx"]
+      returnData = SDmodel_Sim1yr.main(argv=[SDInitial_1yr['ShiMen Reservoir'], SDInitial_1yr['ZhongZhuang Adjustment Reservoir'], SDInitial_1yr['ShiMen WPP Storage Pool'], filelist]) # ['workingDir', 'Tfilename', 'Pfilename', 'latitude', 'dz', 'Output the simulation result or not']
+      print(returnData)
+      SDInitial_1yr['ShiMen Reservoir'] = returnData[0]
+      SDInitial_1yr['ZhongZhuang Adjustment Reservoir'] = returnData[1]
+      SDInitial_1yr['ShiMen WPP Storage Pool'] = returnData[2]
+      SI_output = open('./climateData/climateChange_data/WRS_SI/{0}_{1}_{2}-{3}_SI_{4}.csv'.format(g, s, 2020+j*10, 2020+(j+1)*10, county), 'a')
+      SI_output.write('{0},{1},{2},{3}\n'.format(2020+j*10+yr,returnData[3][0],returnData[3][1],returnData[3][2]))
+      SI_output.close()
+      reservoir_output = open('./climateData/climateChange_data/WRS_reservoir/{0}_{1}_{2}-{3}_reservoir_{4}.csv'.format(g, s, 2020+j*10, 2020+(j+1)*10, county), 'a')
+      reservoir_output.write('{0},{1},{2},{3}\n'.format(2020+j*10+yr,returnData[0],returnData[1],returnData[2]))
+      reservoir_output.close()
+
+  def generateTEMPDATA():
+    StnID = localStnID # for drought use waterResourceSystemStnID
+    for g in GCM:
+      for s in scenarios[g]:
+        for j in range(4):
+          ClimScenCsvFile = '{0}_{1}_{2}-{3}.csv'.format(g, s, 2020+j*10, 2020+(j+1)*10)
+          # print('{0}_{1}_{2}-{3}_{4}.csv'.format(g, s, 2020+j*10, 2020+(j+1)*10, StnID))
+          print(ClimScenCsvFile)
+          runMultiWG(20, StnID, ClimScenCsvFile)
+          files = os.listdir('./MultiWG/MultiWG/OUT')
+          for file in files:
+            if '.csv' in file:
+              f = open("./MultiWG/MultiWG/OUT/{0}".format(file), "r")
+              f_new = open("./climateData/climateChange_data/local_TEMP/{0}_{1}_{2}-{3}_{4}.csv".format(g, s, 2020+j*10, 2020+(j+1)*10, StnID), "w")
+              f.readline()
+              f_new.write('Date,PP01,TX01\n')
+              i = 0
+              for line in f:
+                l = line.split(',')
+                f_new.write('{0}/{1}/{2},{3},{4}\n'.format(2020+j*10+i, l[0].split('-')[1], l[0].split('-')[2], l[1], l[3].replace('\n','')))
+                if l[0].split('-')[1]=='12' and l[0].split('-')[2]=='31':
+                  i+=1
+                  if i == 10:
+                    break
+              f.close()
+              f_new.close()
+            print("./MultiWG/MultiWG/OUT/{0}".format(file))
+            os.remove("./MultiWG/MultiWG/OUT/{0}".format(file))
+  # generateTEMPDATA() # for local MaxT and MinT risk
+  # generateGWLFDATA()
+  # runGWLF()
+  
   generatedData = {}
   risk = {}
   riskLight = {}
   f = open('./systemRecord/climateChange_riskLight.csv', 'w')
   f.write('Time,GCM,scenario,Hazard,2021-2030,2031-2040,2041-2050,2051-2060\n')
   f.close()
+
+  # for g in GCM:
+  #   for s in scenarios[g]:
+  #     for k in range(4):
+  #       generateWRS_SI(g, s, k) # for WRS drought risk
+  # generateWRS_SI("Amon_HadGEM3-GC31-LL", "ssp126", 3)
+
+
   for g in GCM:
-    for j in scenarios[g]:
-      generatedData[j] = {'time': [], 'TEMP': [], 'PRCP': [], 'MN': []} # 480 month
+    for s in scenarios[g]:
+      generatedData[s] = {'time': [], 'TEMP': [], 'SI': [], 'MN': []} # 480 month
+      risk[s] = {"MinT":[],"MaxT":[],"drought":[]}
+      riskLight[s] = {"低溫":[],"高溫":[],"乾旱":[]}
       for k in range(4): # 4 decade
-        risk[j] = {"MinT":[],"MaxT":[],"Water_Demand":[]}
-        riskLight[j] = {"低溫":[],"高溫":[],"乾旱":[]}
-        data = open("./climateChange_data/multiWG_OUT/466920_{0}_{1}_{2}-{3}.csv".format(g, j, 2020+k*10, 2020+(k+1)*10),"r")
-        line = data.readline()
+        TEMP_data = open("./climateData/climateChange_data/local_TEMP/{0}_{1}_{2}-{3}_{4}.csv".format(g, s, 2020+k*10, 2020+(k+1)*10, localStnID), "r")
+        line = TEMP_data.readline()
         for l in range(10):
           for m in range(12):
-            daily_data = [[],[]] # TEMP,PRCP
-            line = data.readline()
-            while int(line.split(',')[0].split('-')[1]) == m+1:
-              daily_data[0].append(float(line.split(',')[3]))
-              daily_data[1].append(float(line.split(',')[1]))
-              line = data.readline()
-            generatedData[j]['time'].append('{0}_{1}'.format(2020+k*10,m+1))
-            generatedData[j]['TEMP'].append(np.mean(daily_data[0]))
-            generatedData[j]['PRCP'].append(np.sum(daily_data[1]))
-            generatedData[j]['MN'].append(m+1)  
+            daily_data = [] # TEMP
+            line = TEMP_data.readline()
+            while int(line.replace('\n','').split(',')[0].split('/')[1]) == m+1:
+              daily_data.append(float(line.split(',')[2]))
+              line = TEMP_data.readline()
+              if '/' not in line:
+                break
+            generatedData[s]['time'].append('{0}_{1}'.format(2020+k*10,m+1))
+            generatedData[s]['TEMP'].append(np.mean(daily_data))
+            generatedData[s]['MN'].append(m+1)  
+
+        # SI_data = open("./climateData/climateChange_data/local_TEMP/{0}_{1}_{2}-{3}_{4}.csv".format(g, s, 2020+k*10, 2020+(k+1)*10), localStnID, "r")
+        # line = SI_data.readline()
+        # for l in range(10):
+        #   for m in range(12):
+        #     daily_data = [] # TEMP
+        #     line = SI_data.readline()
+        #     while int(line.split(',')[0].split('-')[1]) == m+1:
+        #       daily_data.append(float(line.split(',')[3]))
+        #       line = SI_data.readline()
+        #     generatedData[s]['time'].append('{0}_{1}'.format(2020+k*10,m+1))
+        #     generatedData[s]['TEMP'].append(np.mean(daily_data))
+        #     generatedData[s]['MN'].append(m+1)
+        
+
       # generatedData = {
-      #     'ssp126':{'time': [], 'TEMP': [], 'PRCP': [], 'MN': []}, 
-      #     'ssp245':{'time': [], 'TEMP': [], 'PRCP': [], 'MN': []}, 
-      #     'ssp585':{'time': [], 'TEMP': [], 'PRCP': [], 'MN': []}
+      #     'ssp126':{'time': [], 'TEMP': [], 'SI': [], 'MN': []}, 
+      #     'ssp245':{'time': [], 'TEMP': [], 'SI': [], 'MN': []}, 
+      #     'ssp585':{'time': [], 'TEMP': [], 'SI': [], 'MN': []}
       #   }
       # print(hazardScale)  
 
     generatedData = indoorClimateDataEstimation("climateChange", generatedData)
-    # print(generatedData)
+    print(generatedData)
     # risk = {
-    #   'ssp126':{"MinT":[],"MaxT":[],"Water_Demand":[]},
-    #   'ssp245':{"MinT":[],"MaxT":[],"Water_Demand":[]},
-    #   'ssp585':{"MinT":[],"MaxT":[],"Water_Demand":[]}
+    #   'ssp126':{"MinT":[],"MaxT":[],"drought":[]},
+    #   'ssp245':{"MinT":[],"MaxT":[],"drought":[]},
+    #   'ssp585':{"MinT":[],"MaxT":[],"drought":[]}
     # } # 480 month
     # riskLight={
     #   'ssp126':{"低溫":[],"高溫":[],"乾旱":[]},
     #   'ssp245':{"低溫":[],"高溫":[],"乾旱":[]},
     #   'ssp585':{"低溫":[],"高溫":[],"乾旱":[]}
     # } # 4 decade
-    corrFactor = {"MinT":"AirTC_Avg","MaxT":"AirTC_Avg","Water_Demand":"Water_Demand"} #climate factor and risk factor corresponding
-    
-    ecdf_PRCP=[]
-    for i in range(12):
-      ecdf_PRCP.append(ECDF(DataArray_month[2][i]))
+    corrFactor = {"MinT":"nursery_AirTC_Avg_avg","MaxT":"flowering_AirTC_Avg_avg","drought":"SI"} #climate factor and risk factor corresponding
     for s in scenarios[g]:
       for i in risk[s].keys():
         for j in range(480):
           if i == 'MinT':
-            hazardScaleItem = hazardScale["nursery_AirTC_Avg_night"]
+            hazardScaleItem = hazardScale["nursery_AirTC_Avg_avg"]
             value = generatedData[s]['TEMP'][j]
           elif i == 'MaxT':
-            hazardScaleItem = hazardScale["flowering_AirTC_Avg_day"]
+            hazardScaleItem = hazardScale["flowering_AirTC_Avg_avg"]
             value = generatedData[s]['TEMP'][j]
-          elif i == "Water_Demand":
-            hazardScaleItem = hazardScale["flowering_Water_Demand_day"]
-            t=0
-            # print(ecdf_PRCP.x)
-            # print(P66_range['PRCP'][j][0])
-            while ecdf_PRCP[480%12].x[t]<generatedData[s]['PRCP'][j]:
-              t+=1
-              if ecdf_PRCP[480%12].y[t]>0.4:
-                risk[s][i].append('proper')
-                break
-            # print(ecdf_PRCP.y[t])
-            if ecdf_PRCP[480%12].y[t]>0.4:                  # 使用降雨量與歷史降雨量比教作為乾旱判斷之依據
-              risk[s][i].append('proper')
-              continue
-            elif ecdf_PRCP[480%12].y[t]>0.3:
-              risk[s][i].append('slightly_low')
-              continue
-            elif ecdf_PRCP[480%12].y[t]>0.2:
-              risk[s][i].append('low')
-              continue
-            else:
-              risk[s][i].append('very_low')
-              continue
+          elif i == "drought":
+            break
+            hazardScaleItem = hazardScale[""]
+            
           for k in range(6):
             if hazardScaleItem[k]== '-':
               continue
@@ -810,7 +995,7 @@ def climateChangeRiskAssessment(hazardScale):
               else:
                 risk[s][i].append(riskScale[k+1])
               break  
-      # print('climateChange riskScale_{0}:{1}\n'.format(s,risk[s]))
+      print('climateChange riskScale_{0}:{1}\n'.format(s,risk[s]))
       
       score = 0
       for i in risk[s]:
@@ -827,38 +1012,49 @@ def climateChangeRiskAssessment(hazardScale):
               risk[s][i][j] = 0
             else:
               risk[s][i][j] = riskScale.index(risk[s][i][j])-3
-          elif i == "Water_Demand":
+          elif i == "drought":
             Hz = '乾旱'
-            if risk[s][i][j][-3:]=="igh":
-              risk[s][i][j] = 0
-            else:
-              risk[s][i][j] =  -riskScale.index(risk[s][i][j])+3
+            break
+
           if j%120 == 119:
-            # print(score)
-            if score<60:
-              riskLight[s][Hz].append('green')
-            elif score<120:
-              riskLight[s][Hz].append('yellow')
-            elif score<180:
-              riskLight[s][Hz].append('orange')
-            else:
-              riskLight[s][Hz].append('red')
-            score = 0
+            print(j)
+            print(score)
+            if i == "MinT" or i == "MaxT":
+              if score<60:
+                riskLight[s][Hz].append('green')
+              elif score<120:
+                riskLight[s][Hz].append('yellow')
+              elif score<180:
+                riskLight[s][Hz].append('orange')
+              else:
+                riskLight[s][Hz].append('red')
+              score = 0
+            elif i == "drought":
+              if score<60:
+                riskLight[s][Hz].append('green')
+              elif score<120:
+                riskLight[s][Hz].append('yellow')
+              elif score<180:
+                riskLight[s][Hz].append('orange')
+              else:
+                riskLight[s][Hz].append('red')
+              score = 0
           else:
             score+=risk[s][i][j]
       print('climateChange riskScale {0}_{1}:{2}\n'.format(g,s,riskLight[s]))
-      f = open('./systemRecord/climateChange_riskLight.csv', 'a')
-      for Hz in riskLight[s].keys():
-        f.write('{0},{1},{2},{3},{4},{5},{6},{7}\n'.format(now.strftime('%Y-%m-%d %H:%M'),g,s,Hz,riskLight[s][Hz][0],riskLight[s][Hz][1],riskLight[s][Hz][2],riskLight[s][Hz][3]))
-      f.close()
-      f = open('./systemRecord/climateChange_riskLight.txt', 'a')
-      f.write('{0},{1},{2},{3}\n'.format(now.strftime('%Y-%m-%d %H:%M'),g,s,riskLight[s]))
-      f.close()
+      
+      # f = open('./systemRecord/climateChange_riskLight.csv', 'a')
+      # for Hz in riskLight[s].keys():
+      #   f.write('{0},{1},{2},{3},{4},{5},{6},{7}\n'.format(now.strftime('%Y-%m-%d %H:%M'),g,s,Hz,riskLight[s][Hz][0],riskLight[s][Hz][1],riskLight[s][Hz][2],riskLight[s][Hz][3]))
+      # f.close()
+      # f = open('./systemRecord/climateChange_riskLight.txt', 'a')
+      # f.write('{0},{1},{2},{3}\n'.format(now.strftime('%Y-%m-%d %H:%M'),g,s,riskLight[s]))
+      # f.close()
   return riskLight
 
 def operationAssessment(timeScale,riskLight):
   operationalSuggestion={}
-  operationData = open ('./operationMethod/operationMethod_{0}.csv'.format(timeScale), 'r')
+  operationData = open ('./operationMethodData/operationMethod_{0}.csv'.format(timeScale), 'r')
   if timeScale == "realTime":
     for line in operationData.readlines():
       line=line.split(',')
@@ -1188,44 +1384,43 @@ def testGA():
   print("Predicted output based on the best solution : {prediction}".format(prediction=prediction))
 
 def main():
-  operationalSuggestion={}
+  operationalSuggestion = {}
   seasonalLongTerm_P = {}
-  with open ('./inputData.txt', 'r') as inputData:
-    location = inputData.readline().split(':')[1].replace("\n", "")
-    crop = inputData.readline().split(':')[1].replace("\n", "")
-    growthStage = inputData.readline().split(':')[1].replace("\n", "").split(',')
-    P = inputData.readline().split('],[')
-    seasonalLongTerm_P["TEMP"] = [[],[],[]]
-    seasonalLongTerm_P["TEMP"][0] = P[0].split('[[')[1].split(',')
-    seasonalLongTerm_P["TEMP"][1] = P[1].split(',')
-    seasonalLongTerm_P["TEMP"][2] = P[2].split(']]')[0].split(',')
-    P = inputData.readline().split('],[')
-    seasonalLongTerm_P["PRCP"] = [[],[],[]]
-    seasonalLongTerm_P["PRCP"][0] = P[0].split('[[')[1].split(',')
-    seasonalLongTerm_P["PRCP"][1] = P[1].split(',')
-    seasonalLongTerm_P["PRCP"][2] = P[2].split(']]')[0].split(',')
-    for i in seasonalLongTerm_P:
-      for j in seasonalLongTerm_P[i]:
-        j[0] = int(j[0])
-        j[1] = int(j[1])
-        j[2] = int(j[2])
-    first_month = int(inputData.readline().split(':')[1].split('#')[0])
+  with open('./inputData.json', newline='') as jsonfile:
+    inputData = json.load(jsonfile)
+    location = inputData["location"]
+    crop = inputData["cropItem"]
+    growthStage = inputData["growthStage"]
+    seasonalLongTerm_P["TEMP"] = inputData["seasonalLongTerm_P_TEMP"]
+    seasonalLongTerm_P["PRCP"] = inputData["seasonalLongTerm_P_PRCP"]
+    first_month = inputData["seasonalLongTerm_first_month"]
+    localStnID = inputData["localStnID"]
+    waterResourceSystemStnID = inputData["waterResourceSystemStnID"]
+    GCM = inputData["GCM"]
+    scenarios = inputData["scenarios"]
+    variant_id = inputData["variant_id"]
+    county = inputData["county"]
+    reservoirName = inputData["reservoirName"]
+    SDInitial = inputData["SDInitial"]
 
-  realTimehazardScale = getHazardScale(crop, growthStage[0], "realTime")
-  riskLight_realTime = realTimeRiskAssessment(realTimehazardScale)
-  operationalSuggestion["realTime"]=operationAssessment("realTime",riskLight_realTime)
+  # realTimehazardScale = getHazardScale(crop, county, growthStage[0], "realTime")
+  # riskLight_realTime = realTimeRiskAssessment(realTimehazardScale)
+  # operationalSuggestion["realTime"]=operationAssessment("realTime",riskLight_realTime)
   
-  aWeekhazardScale = getHazardScale(crop, growthStage[0], "aWeek")
-  riskLight_aWeek = aWeekRiskAssessment(location, aWeekhazardScale, riskLight_realTime)
-  operationalSuggestion["aWeek"]=operationAssessment("aWeek",riskLight_aWeek)
+  # aWeekhazardScale = getHazardScale(crop, county, growthStage[0], "aWeek")
+  # riskLight_aWeek = aWeekRiskAssessment(location, aWeekhazardScale, riskLight_realTime)
+  # operationalSuggestion["aWeek"]=operationAssessment("aWeek",riskLight_aWeek)
 
-  seasonalLongTermhazardScale = getHazardScale(crop, growthStage, "seasonalLongTerm")
-  riskLight_seasonalLongTerm = seasonalLongTermRiskAssessment(seasonalLongTermhazardScale, riskLight_aWeek, seasonalLongTerm_P, first_month)
-  operationalSuggestion["seasonalLongTerm"]=operationAssessment("seasonalLongTerm",riskLight_seasonalLongTerm)
+  # seasonalLongTermhazardScale = getHazardScale(crop, county, growthStage, "seasonalLongTerm")
+  # riskLight_seasonalLongTerm = seasonalLongTermRiskAssessment(seasonalLongTermhazardScale, riskLight_aWeek, seasonalLongTerm_P, first_month, localStnID, waterResourceSystemStnID)
+  # operationalSuggestion["seasonalLongTerm"]=operationAssessment("seasonalLongTerm",riskLight_seasonalLongTerm)
 
-  climateChangehazardScale = getHazardScale(crop, "", "climateChange")
-  riskLight_climateChange = climateChangeRiskAssessment(climateChangehazardScale)
+  climateChangehazardScale = getHazardScale(crop, county, "", "climateChange")
+  riskLight_climateChange = climateChangeRiskAssessment(climateChangehazardScale, GCM, scenarios, variant_id, localStnID, waterResourceSystemStnID, county, reservoirName, SDInitial)
   operationalSuggestion["climateChange"]=operationAssessment("climateChange",riskLight_climateChange)
   
+  # WG = SourceFileLoader("MultiWG.WG_SimpleRun", "./MultiWG/MultiWG/WG_SimpleRun.py").load_module()
+  # WG.main(argv=['./MultiWG/MultiWG','n','y']) # ['workingDir', 'multi-site or not', 'output the validation result or not']
+
   # testGA()
 main()

@@ -1,0 +1,13 @@
+資料標示：項目名稱，資料類別，單位，資料來源
+Storage_Limit_Jan：一月水庫儲量，waterResourceSystem_seasonalLongTerm，萬噸，SD Model
+Storage_Limit_Feb：二月水庫儲量，waterResourceSystem_seasonalLongTerm，萬噸，SD Model
+Storage_Limit_Mar：三月水庫儲量，waterResourceSystem_seasonalLongTerm，萬噸，SD Model
+Storage_Limit_Apr：四月水庫儲量，waterResourceSystem_seasonalLongTerm，萬噸，SD Model
+Storage_Limit_May：五月水庫儲量，waterResourceSystem_seasonalLongTerm，萬噸，SD Model
+Storage_Limit_Jun：六月水庫儲量，waterResourceSystem_seasonalLongTerm，萬噸，SD Model
+Storage_Limit_Jul：七月水庫儲量，waterResourceSystem_seasonalLongTerm，萬噸，SD Model
+Storage_Limit_Aug：八月水庫儲量，waterResourceSystem_seasonalLongTerm，萬噸，SD Model
+Storage_Limit_Sep：九月水庫儲量，waterResourceSystem_seasonalLongTerm，萬噸，SD Model
+Storage_Limit_Oct：十月水庫儲量，waterResourceSystem_seasonalLongTerm，萬噸，SD Model
+Storage_Limit_Nov：十一月水庫儲量，waterResourceSystem_seasonalLongTerm，萬噸，SD Model
+Storage_Limit_Dec：十二月水庫儲量，waterResourceSystem_seasonalLongTerm，萬噸，SD Model

@@ -1,0 +1,29 @@
+{
+  "location":"中壢區",
+  "cropItem":"tomato",
+  "growthStage":["flowering","flowering","flowering"],
+  "seasonalLongTerm_P_TEMP":[[10,50,40],[0,50,50],[0,50,50]],
+  "seasonalLongTerm_P_PRCP":[[30,50,20],[30,50,20],[30,50,20]],  
+  "seasonalLongTerm_first_month": 6,
+  "localStnID":"C0C590",
+  "waterResourceSystemStnID":"C0C460",
+  "county":"Taoyuan",
+  "reservoirName":"ShiMen",
+  "SDInitial": {
+    "ShiMen Reservoir":205588000,
+    "ZhongZhuang Adjustment Reservoir":5050000,
+    "ShiMen WPP Storage Pool":500000
+  },
+  "reservoirStorageNow": 13123.44,
+  "GCM":["Amon_HadGEM3-GC31-LL", "Amon_MIROC6", "Amon_CAMS-CSM1-0"],
+  "scenarios": {
+    "Amon_HadGEM3-GC31-LL": ["ssp126", "ssp245", "ssp585"],
+    "Amon_MIROC6": ["ssp119", "ssp126", "ssp245", "ssp585"],
+    "Amon_CAMS-CSM1-0": ["ssp119", "ssp126", "ssp245", "ssp585"]
+  },
+  "variant_id": {
+    "Amon_HadGEM3-GC31-LL": "r1i1p1f3",
+    "Amon_MIROC6": "r1i1p1f1",
+    "Amon_CAMS-CSM1-0": "r1i1p1f1"
+  }
+}
