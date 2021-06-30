@@ -15,7 +15,7 @@
     "ShiMen WPP Storage Pool":500000
   },
   "reservoirStorageNow": 13123.44,
-  "waterRight": [460,816,846,796,765,783,853,861,780,808,697,446],
+  "waterRight": [4650,6692,8742,8090,7783,7540,8890,8796,7763,8314,7608,4650],
   "GCM":["Amon_HadGEM3-GC31-LL", "Amon_MIROC6", "Amon_CAMS-CSM1-0"],
   "scenarios": {
     "Amon_HadGEM3-GC31-LL": ["ssp126", "ssp245", "ssp585"],

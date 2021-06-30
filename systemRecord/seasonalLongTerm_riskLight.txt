@@ -244,3 +244,5 @@
 2021-06-28 22:33{'低溫': ['green', 'green', 'green'], '高溫': ['orange', 'yellow', 'yellow'], '乾旱': ['green', 'green', 'green']}
 2021-06-28 22:49{'低溫': ['green', 'green', 'green'], '高溫': ['orange', 'orange', 'yellow'], '乾旱': ['green', 'green', 'green']}
 2021-06-28 22:49{'低溫': ['green', 'green', 'green'], '高溫': ['orange', 'orange', 'yellow'], '乾旱': ['green', 'green', 'green']}
+2021-06-29 09:57{'低溫': ['green', 'green', 'green'], '高溫': ['orange', 'orange', 'yellow'], '乾旱': ['green', 'orange', 'red']}
+2021-06-30 22:06{'低溫': ['green', 'green', 'green'], '高溫': ['orange', 'yellow', 'orange'], '乾旱': ['green', 'red', 'red']}

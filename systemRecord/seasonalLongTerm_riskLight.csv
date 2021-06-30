@@ -6,3 +6,11 @@ Time,month_now,Hazard,1個月後,2個月後,3個月後
 2021-06-28 22:49,5,低溫,green,green,green
 2021-06-28 22:49,5,高溫,orange,orange,yellow
 2021-06-28 22:49,5,乾旱,green,green,green
+
+2021-06-29 09:57,5,低溫,green,green,green
+2021-06-29 09:57,5,高溫,orange,orange,yellow
+2021-06-29 09:57,5,乾旱,green,orange,red
+
+2021-06-30 22:06,5,低溫,green,green,green
+2021-06-30 22:06,5,高溫,orange,yellow,orange
+2021-06-30 22:06,5,乾旱,green,red,red
