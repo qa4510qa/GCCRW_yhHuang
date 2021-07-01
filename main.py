@@ -21,6 +21,7 @@ from importlib.machinery import SourceFileLoader
 import xlrd
 from openpyxl import Workbook
 import scipy.stats as stats
+import seaborn as sns
 # from statsmodels.distributions.empirical_distribution import ECDF
 
 CWB_API_Key = 'CWB-B7BC29A4-FADA-4DE6-9918-F2FA71A55F80'
@@ -402,8 +403,8 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek, P, first_month,
           f.write('{0},{1}\n'.format(line.split(',')[1], line.split(',')[3].replace('\n','')))
       historyData_WRS.close()
       f.close()
-
-    PRCPRatio = open('./climateData/historyClimateData/{0}_PRCP_Qvalue.csv'.format(waterResourceSystemStnID),"w")
+    
+    PRCPRatio = open('./climateData/historyClimateData/{0}_PRCP_coef.csv'.format(waterResourceSystemStnID),"w")
     PRCPRatio.write('month, lower_boundary, upper_boundary, P(W), P(W|W), P(W|D), B_shape, B_scale, N_shape, N_scale, A_shape, A_scale\n')
     for i in range(1,13,1): # 12 months
       data = []
@@ -437,22 +438,81 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek, P, first_month,
         avg_m.append(average(data_m[j]))
       q30 = np.percentile(avg_m, 30)
       q70 = np.percentile(avg_m, 70)
-      weiBull_corr = {'B':[], 'N':[], 'A':[]}
+      gamma_corr = {'B':[], 'N':[], 'A':[]}
       data_1 = []
-      for k in weiBull_corr.keys():
+      for k in gamma_corr.keys():
         for j in range(10): # 10 years
           if k == 'B' and avg_m[j] < q30:
-            data_1.extend(data_m[j][1:])
+            data_1.extend(data_m[j][:])
           elif k == 'N' and avg_m[j] > q30 and avg_m[j] < q70 :
-            data_1.extend(data_m[j][1:])
+            data_1.extend(data_m[j][:])
           elif k == 'A' and avg_m[j] > q70:
-            data_1.extend(data_m[j][1:])
-        # weiBull_corr[k] 
-        shape, loc, scale = stats.weibull_min.fit(data_1, loc = 0) # shape, loc, scale
-        weiBull_corr[k] = [shape, scale]
-      PRCPRatio.write('{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}\n'.format(i, q30, q70, zeroRate[0], zeroRate[1], zeroRate[2], weiBull_corr['B'][0], weiBull_corr['B'][1], weiBull_corr['N'][0], weiBull_corr['N'][1], weiBull_corr['A'][0], weiBull_corr['A'][1]))
-      # (loc, scale) = s.exponweib.fit_loc_scale(data, 1, 1)
-      # print loc, scale
+            data_1.extend(data_m[j][:])
+        scale = np.var(data_1)/np.mean(data_1)
+        shape = np.mean(data_1)/scale
+        gamma_corr[k] = [shape, scale]
+        # data = np.random.gamma(shape, scale, 10000)
+        # mean_sim = np.mean(data)
+        # std_sim = np.std(data)
+        # print(np.mean(data_1), mean_sim, np.std(data_1), std_sim)
+
+      PRCPRatio.write('{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}\n'.format(i, q30, q70, zeroRate[0], zeroRate[1], zeroRate[2], gamma_corr['B'][0], gamma_corr['B'][1], gamma_corr['N'][0], gamma_corr['N'][1], gamma_corr['A'][0], gamma_corr['A'][1]))
+
+      
+
+    # PRCPRatio = open('./climateData/historyClimateData/{0}_PRCP_coef.csv'.format(waterResourceSystemStnID),"w")
+    # PRCPRatio.write('month, lower_boundary, upper_boundary, P(W), P(W|W), P(W|D), B_shape, B_scale, N_shape, N_scale, A_shape, A_scale\n')
+    # for i in range(1,13,1): # 12 months
+    #   data = []
+    #   data_m = [[],[],[],[],[],[],[],[],[],[]]
+    #   zeroRate = [0,0,0] # P(W), P(W|W), P(W|D)
+    #   avg_m = []
+    #   f = open('./climateData/historyClimateData/{0}_PRCP_m_{1}.csv'.format(waterResourceSystemStnID, i),"r")
+    #   for line in f:
+    #     data.append(float(line.split(',')[1]))
+    #     data_m[int(line.split(',')[0].split('/')[0][2:])-8].append(float(line.split(',')[1].replace('\n',''))/10) # 轉為cm/day
+
+    #   for j in range(len(data)): # 10 years
+    #     if (data[j]) == 0.0:
+    #       zeroRate[0]+=1
+    #       if data[j-1] == 0.0 and j != 0:
+    #         zeroRate[1]+=1
+    #     elif (data[j]) != 0.0 and data[j-1] == 0.0 and j != 0:
+    #       zeroRate[2]+=1
+    #   zeroRate[1]=zeroRate[1]/zeroRate[0]
+    #   zeroRate[2]=zeroRate[2]/(len(data)-zeroRate[0])
+    #   zeroRate[0]=zeroRate[0]/len(data)
+
+    #   while 0.0 in data:
+    #     data.remove(0.0)
+
+    #   for j in range(10):
+    #     while 0.0 in data_m[j]:
+    #       data_m[j].remove(0.0)
+      
+    #   for j in range(10): # 10 years
+    #     avg_m.append(average(data_m[j]))
+    #   q30 = np.percentile(avg_m, 30)
+    #   q70 = np.percentile(avg_m, 70)
+    #   weiBull_corr = {'B':[], 'N':[], 'A':[]}
+    #   data_1 = []
+    #   for k in weiBull_corr.keys():
+    #     for j in range(10): # 10 years
+    #       if k == 'B' and avg_m[j] < q30:
+    #         data_1.extend(data_m[j][1:])
+    #       elif k == 'N' and avg_m[j] > q30 and avg_m[j] < q70 :
+    #         data_1.extend(data_m[j][1:])
+    #       elif k == 'A' and avg_m[j] > q70:
+    #         data_1.extend(data_m[j][1:])
+    #     # weiBull_corr[k] 
+    #     shape, loc, scale = stats.weibull_min.fit(data_1, loc = 0) # shape, loc, scale
+    #     # x = stats.weibull_min.rvs(shape, loc, scale, size=1000)
+    #     # plt.plot(x)
+    #     # plt.show()
+    #     weiBull_corr[k] = [shape, scale]
+    #   PRCPRatio.write('{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}\n'.format(i, q30, q70, zeroRate[0], zeroRate[1], zeroRate[2], weiBull_corr['B'][0], weiBull_corr['B'][1], weiBull_corr['N'][0], weiBull_corr['N'][1], weiBull_corr['A'][0], weiBull_corr['A'][1]))
+    #   # (loc, scale) = s.exponweib.fit_loc_scale(data, 1, 1)
+    #   # print loc, scale
     
   def generateTEMPCorr():
     for i in range(1,13,1):
@@ -475,7 +535,7 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek, P, first_month,
       historyData_local.close()
       f.close()
 
-    Qvalue = open('./climateData/historyClimateData/{0}_TEMP_Qvalue.csv'.format(waterResourceSystemStnID),"w")
+    Qvalue = open('./climateData/historyClimateData/{0}_TEMP_coef.csv'.format(waterResourceSystemStnID),"w")
     Qvalue.write('month, low_boundary, high_boundary, TEMP_avg_B, TEMP_avg_N, TEMP_avg_A, TEMP_std_B, TEMP_std_N, TEMP_std_A, TEMP_AR1_corr_B, TEMP_AR1_corr_N, TEMP_AR1_corr_A\n')
     for i in range(1,13,1): # 12 months
       data = []
@@ -524,7 +584,7 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek, P, first_month,
         AR1_corr[k] = np.corrcoef(data_1, data_2)[0,1]
       Qvalue.write('{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}\n'.format(i, q30, q70, avg_BNA[0], avg_BNA[1], avg_BNA[2], std_BNA[0], std_BNA[1], std_BNA[2], AR1_corr['B'], AR1_corr['N'], AR1_corr['A']))
 
-    Qvalue = open('./climateData/historyClimateData/{0}_TEMP_Qvalue.csv'.format(localStnID),"w")
+    Qvalue = open('./climateData/historyClimateData/{0}_TEMP_coef.csv'.format(localStnID),"w")
     Qvalue.write('month, low_boundary, high_boundary, TEMP_avg_B, TEMP_avg_N, TEMP_avg_A, TEMP_std_B, TEMP_std_N, TEMP_std_A, TEMP_AR1_corr_B, TEMP_AR1_corr_N, TEMP_AR1_corr_A\n')
     for i in range(1,13,1): # 12 months
       data = []
@@ -573,11 +633,11 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek, P, first_month,
         AR1_corr[k] = np.corrcoef(data_1, data_2)[0,1]
       Qvalue.write('{0}, {1}, {2}, {3}, {4}, {5}, {6}, {7}, {8}, {9}, {10}, {11}\n'.format(i, q30, q70, avg_BNA[0], avg_BNA[1], avg_BNA[2], std_BNA[0], std_BNA[1], std_BNA[2], AR1_corr['B'], AR1_corr['N'], AR1_corr['A']))
 
-  # generateTEMPCorr()
+  generateTEMPCorr()
   generatePRCPRatio()
 
   def readTEMPCoef(m, group, Stn):
-    f = open('./climateData/historyClimateData/{0}_TEMP_Qvalue.csv'.format(Stn), 'r')
+    f = open('./climateData/historyClimateData/{0}_TEMP_coef.csv'.format(Stn), 'r')
     l = f.readline()
     for line in f:
       if int(line.split(',')[0]) == m:
@@ -593,7 +653,7 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek, P, first_month,
     return value # avg, std, AR1_corr
 
   def readPRCPCoef(m, group, Stn):
-    f = open('./climateData/historyClimateData/{0}_PRCP_Qvalue.csv'.format(Stn), 'r')
+    f = open('./climateData/historyClimateData/{0}_PRCP_coef.csv'.format(Stn), 'r')
     l = f.readline()
     for line in f:
       if int(line.split(',')[0]) == m:
@@ -609,15 +669,14 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek, P, first_month,
     print(value)
     return value #  P(W), P(W|W), P(W|D), shape, scale
 
-
   for i in range(3):
     coef = readTEMPCoef(i+first_month, Climate_ratio['TEMP_GWLF'][i], waterResourceSystemStnID)
     GWLFData['Date'].append('{0}/{1}/1'.format(now.strftime('%Y'),i+first_month))
     GWLFData['TEMP'].append(coef[0])
     for j in range(1,num_of_days[i+first_month],1):
       GWLFData['Date'].append('{0}/{1}/{2}'.format(now.strftime('%Y'),i+first_month,j))
-      GWLFData['TEMP'].append(coef[0]+coef[2]*(GWLFData['TEMP'][j-1]-coef[0])+random.random()*coef[1]*pow((1-pow(coef[2],2)),0.5))
-  
+      GWLFData['TEMP'].append(coef[0]+coef[2]*(GWLFData['TEMP'][j-1]-coef[0])+np.random.normal(0,1)*coef[1]*pow((1-pow(coef[2],2)),0.5))
+    
   for i in range(3):
     coef = readPRCPCoef(i+first_month, Climate_ratio['PRCP_GWLF'][i], waterResourceSystemStnID)
     rand = random.random()
@@ -625,11 +684,11 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek, P, first_month,
       GWLFData['PRCP'].append(0)
     else:
       rand = random.random()
-      GWLFData['PRCP'].append(pow(-np.log(1-rand),1/coef[3])*(coef[4])*10)
+      GWLFData['PRCP'].append(np.random.gamma(coef[3], coef[4], 1)[0]*10)
     for j in range(1,num_of_days[i+first_month],1):
       rand = random.random()
       if (GWLFData['PRCP'][j-1] == 0 and rand < coef[2]) or (GWLFData['PRCP'][j-1] != 0 and rand < coef[1]):
-        GWLFData['PRCP'].append(pow(-np.log(1-rand),1/coef[3])*(coef[4])*10)
+        GWLFData['PRCP'].append(np.random.gamma(coef[3], coef[4], 1)[0]*10)
       else:
         GWLFData['PRCP'].append(0)
 
@@ -638,14 +697,12 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek, P, first_month,
     coef = readTEMPCoef(i+first_month, Climate_ratio['TEMP_local'][i], localStnID)
     TEMP_local.append(coef[0])
     for j in range(1,num_of_days[i+first_month],1):
-      TEMP_local.append(coef[0]+coef[2]*(GWLFData['TEMP'][j-1]-coef[0])+random.random()*coef[1]*pow((1-pow(coef[2],2)),0.5))
+      TEMP_local.append(coef[0]+coef[2]*(GWLFData['TEMP'][j-1]-coef[0])+np.random.normal(0,1)*coef[1]*pow((1-pow(coef[2],2)),0.5))
 
     generatedData['TEMP'].append([np.mean(TEMP_local)-np.std(TEMP_local), np.mean(TEMP_local)+np.std(TEMP_local)])
     generatedData['MN'].append([first_month+i, first_month+i])
   
   # print(generatedData)
-  # print(GWLFData)
-
 
   # historyData_WRS=open("./climateData/historyClimateData/climateData_daily_{0}.csv".format(waterResourceSystemStnID),"r")
   # historyData_local=open("./climateData/historyClimateData/climateData_daily_{0}.csv".format(localStnID),"r")
@@ -922,8 +979,9 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek, P, first_month,
     if i == 2: break
     generatedData['water_storage'][i+1] = generatedData['water_storage'][i]
 
-  # print(discharge)
-  # print(generatedData['water_storage'])
+  print(GWLFData['PRCP'])
+  print(discharge)
+  print(generatedData['water_storage'])
 
   risk = {"MinT":[],"MaxT":[],"drought":[]} # 3 month
   riskLight={"低溫":[],"高溫":[],"乾旱":[]} # 3 month

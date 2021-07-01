@@ -1274,3 +1274,147 @@ Time,Hazard,1天後_day,1天後_night,2天後_day,2天後_night,3天後_day,3天
 2021-06-30 22:06,高濕,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,yellow,yellow,orange,yellow,orange
 2021-06-30 22:06,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
 2021-06-30 22:06,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 00:38,高溫,yellow,red,yellow,red,yellow,orange,yellow,orange,yellow,red,yellow,red
+2021-07-01 00:38,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 00:38,高濕,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-07-01 00:38,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 00:38,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 01:03,高溫,yellow,orange,yellow,orange,yellow,red,yellow,red,yellow,red,yellow,red
+2021-07-01 01:03,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 01:03,高濕,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-07-01 01:03,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 01:03,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 01:03,高溫,yellow,red,yellow,orange,yellow,orange,yellow,red,yellow,red,orange,red
+2021-07-01 01:03,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 01:03,高濕,yellow,orange,yellow,orange,yellow,orange,yellow,yellow,yellow,orange,yellow,orange
+2021-07-01 01:03,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 01:03,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 01:04,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,red,yellow,red,orange,red
+2021-07-01 01:04,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 01:04,高濕,green,orange,yellow,orange,yellow,orange,yellow,yellow,yellow,orange,yellow,orange
+2021-07-01 01:04,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 01:04,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 01:05,高溫,yellow,orange,yellow,orange,yellow,red,yellow,red,yellow,red,orange,red
+2021-07-01 01:05,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 01:05,高濕,yellow,orange,yellow,orange,orange,orange,green,yellow,yellow,orange,yellow,orange
+2021-07-01 01:05,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 01:05,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 01:07,高溫,yellow,red,yellow,orange,yellow,red,yellow,orange,yellow,red,yellow,red
+2021-07-01 01:07,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 01:07,高濕,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-07-01 01:07,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 01:07,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 01:08,高溫,yellow,red,yellow,orange,yellow,orange,yellow,red,yellow,red,yellow,red
+2021-07-01 01:08,低溫,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 01:08,高濕,yellow,orange,yellow,orange,yellow,orange,green,orange,yellow,orange,yellow,orange
+2021-07-01 01:08,強風,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 01:08,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 21:05,高溫,yellow,orange,yellow,red,yellow,orange,yellow,orange,yellow,red,yellow,red,yellow,red
+2021-07-01 21:05,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:05,高濕,yellow,orange,yellow,orange,yellow,orange,yellow,orange,green,yellow,yellow,orange,yellow,orange
+2021-07-01 21:05,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:05,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 21:06,高溫,orange,red,yellow,red,yellow,orange,yellow,red,yellow,red,yellow,red,yellow,red
+2021-07-01 21:06,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:06,高濕,yellow,orange,yellow,orange,yellow,orange,yellow,yellow,yellow,orange,yellow,orange,yellow,orange
+2021-07-01 21:06,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:06,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 21:07,高溫,yellow,orange,yellow,red,yellow,orange,yellow,red,yellow,red,yellow,red,orange,red
+2021-07-01 21:07,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:07,高濕,green,orange,green,orange,yellow,orange,yellow,yellow,yellow,orange,yellow,orange,yellow,orange
+2021-07-01 21:07,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:07,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 21:08,高溫,yellow,red,yellow,orange,yellow,orange,yellow,red,yellow,red,yellow,red,orange,red
+2021-07-01 21:08,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:08,高濕,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,yellow,yellow,orange
+2021-07-01 21:08,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:08,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 21:45,高溫,yellow,red,yellow,red,yellow,red,yellow,red,yellow,red,yellow,red,orange,red
+2021-07-01 21:45,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:45,高濕,yellow,orange,yellow,orange,yellow,orange,yellow,yellow,green,yellow,yellow,yellow,yellow,orange
+2021-07-01 21:45,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:45,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 21:50,高溫,yellow,red,yellow,orange,yellow,orange,yellow,red,yellow,red,yellow,red,orange,red
+2021-07-01 21:50,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:50,高濕,yellow,orange,green,orange,yellow,orange,yellow,orange,green,orange,yellow,orange,yellow,orange
+2021-07-01 21:50,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:50,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 21:52,高溫,yellow,red,yellow,red,yellow,orange,yellow,red,yellow,red,yellow,red,yellow,red
+2021-07-01 21:52,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:52,高濕,yellow,orange,yellow,orange,yellow,red,yellow,yellow,yellow,orange,yellow,orange,yellow,orange
+2021-07-01 21:52,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:52,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 21:55,高溫,yellow,orange,yellow,red,yellow,orange,yellow,red,yellow,red,yellow,red,yellow,red
+2021-07-01 21:55,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:55,高濕,yellow,orange,yellow,orange,yellow,orange,yellow,orange,green,orange,yellow,orange,yellow,orange
+2021-07-01 21:55,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:55,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 21:56,高溫,yellow,orange,yellow,orange,yellow,red,yellow,red,yellow,red,yellow,red,orange,red
+2021-07-01 21:56,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:56,高濕,green,orange,yellow,orange,orange,red,yellow,yellow,green,orange,yellow,orange,yellow,orange
+2021-07-01 21:56,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:56,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 21:57,高溫,yellow,orange,yellow,orange,yellow,red,yellow,red,yellow,orange,yellow,red,orange,red
+2021-07-01 21:57,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:57,高濕,green,orange,yellow,orange,yellow,red,yellow,yellow,green,orange,yellow,orange,yellow,orange
+2021-07-01 21:57,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:57,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 21:59,高溫,yellow,red,yellow,orange,yellow,red,yellow,red,yellow,red,yellow,red,yellow,red
+2021-07-01 21:59,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:59,高濕,green,orange,green,orange,yellow,orange,yellow,yellow,yellow,yellow,yellow,orange,yellow,orange
+2021-07-01 21:59,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 21:59,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 22:05,高溫,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,red,yellow,red,orange,red
+2021-07-01 22:05,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 22:05,高濕,yellow,orange,green,orange,yellow,red,yellow,orange,green,orange,yellow,orange,yellow,orange
+2021-07-01 22:05,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 22:05,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 22:06,高溫,yellow,red,yellow,orange,yellow,red,yellow,orange,yellow,orange,yellow,red,yellow,red
+2021-07-01 22:06,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 22:06,高濕,yellow,orange,green,orange,yellow,orange,yellow,orange,green,orange,yellow,orange,yellow,orange
+2021-07-01 22:06,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 22:06,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 22:06,高溫,yellow,orange,yellow,orange,yellow,red,yellow,red,yellow,red,yellow,red,orange,red
+2021-07-01 22:06,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 22:06,高濕,yellow,orange,green,orange,yellow,red,yellow,yellow,yellow,yellow,yellow,orange,yellow,orange
+2021-07-01 22:06,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 22:06,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 22:06,高溫,yellow,red,yellow,red,yellow,orange,yellow,orange,yellow,red,yellow,red,orange,red
+2021-07-01 22:06,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 22:06,高濕,green,orange,green,orange,yellow,orange,yellow,yellow,yellow,orange,yellow,orange,yellow,orange
+2021-07-01 22:06,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 22:06,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 22:07,高溫,orange,red,yellow,orange,yellow,red,yellow,orange,yellow,red,yellow,red,orange,red
+2021-07-01 22:07,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 22:07,高濕,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-07-01 22:07,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 22:07,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-01 22:07,高溫,yellow,red,yellow,orange,yellow,red,yellow,red,yellow,red,yellow,red,yellow,red
+2021-07-01 22:07,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 22:07,高濕,green,orange,yellow,orange,orange,orange,yellow,yellow,green,yellow,yellow,orange,yellow,orange
+2021-07-01 22:07,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-01 22:07,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
