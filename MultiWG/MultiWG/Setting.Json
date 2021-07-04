@@ -7,15 +7,15 @@
         "C0C590": "C0C590.csv"
     },
     "ClimScenCsvFile": {
-        "C0C590": "historical.csv"
+        "C0C590": "baseline.csv"
     },
     "Var": [
         "PP01",
         "TX01"
     ],
     "P_Threshold": 0.01,
-    "P_Distribution": "Auto",
-    "GenYear": 100,
+    "P_Distribution": "lognorm",
+    "GenYear": 200,
     "Condition": true,
     "LeapYear": false,
     "Smooth": false,

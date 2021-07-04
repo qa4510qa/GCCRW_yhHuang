@@ -1418,3 +1418,15 @@ Time,Hazard,1天後_day,1天後_night,2天後_day,2天後_night,3天後_day,3天
 2021-07-01 22:07,高濕,green,orange,yellow,orange,orange,orange,yellow,yellow,green,yellow,yellow,orange,yellow,orange
 2021-07-01 22:07,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
 2021-07-01 22:07,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-02 21:55,高溫,yellow,orange,yellow,red,yellow,orange,yellow,red,orange,red,orange,red,yellow,red
+2021-07-02 21:55,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-02 21:55,高濕,green,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-07-02 21:55,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-02 21:55,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+
+2021-07-02 21:56,高溫,yellow,orange,yellow,orange,yellow,red,yellow,red,orange,red,orange,red,yellow,red
+2021-07-02 21:56,低溫,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-02 21:56,高濕,green,orange,yellow,orange,green,yellow,yellow,orange,yellow,orange,yellow,orange,yellow,orange
+2021-07-02 21:56,強風,green,green,green,green,green,green,green,green,green,green,green,green,green,green
+2021-07-02 21:56,乾旱,green,green,green,green,green,green,green,green,green,green,green,green,green,green

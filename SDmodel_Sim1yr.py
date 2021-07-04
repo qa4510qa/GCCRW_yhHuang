@@ -119,6 +119,23 @@ def SD_SIvalue(Actual, Demand, NYears = None):
     SIindex = 100/NYears*SIindex
     return SIindex
 
+def SD_MCDSandDPDvalue(Actual, Demand, NYears = None):
+    Deficit = Demand - Actual
+    shortage = 0
+    count = 0
+    MCDS = 0
+    DPD = 0
+    for i in range(len(Actual)):
+        if Deficit[i]>0:
+            shortage+=Deficit[i]
+            count+=1
+        else:
+            MCDS = max(MCDS, count)
+            DPD = max(DPD, shortage/np.sum(Demand[i-count:i])*100*count)
+            count = 0
+            shortage = 0
+    return MCDS, DPD
+
 def SD_DailyRatio(SDResult): #2012
     # Agri ratio should equal to one, Ind = Domes >=1 since there is other water source from Sansia river and other sluce.
     PlanOutPublic = ["Water Right ShiMenLongTan WPP","Water Right PingZhen WPP1","Water Right PingZhen WPP2","Water Right DaNan WPP1","Water Right DaNan WPP2"] # ,"Water Right BanXin WPP" 因北桃固定拿17萬噸的水，同時板新還供應其他地方，故暫時不考慮
@@ -131,8 +148,9 @@ def SD_DailyRatio(SDResult): #2012
     SI_Public = SD_SIvalue(SDResult["Domestic Water Demand"]+SDResult["Industry Water Demand"], SDResult[PlanOutPublic].sum(axis = 1), NYears = None)
     SI_AgriTao = SD_SIvalue(SDResult["Transfer From TaoYuanAgriChannel To TaoYuanAgriWaterDemand"], SDResult["Water Right TaoYuan AgriChannel AgriWater"])
     SI_AgriShi = SD_SIvalue(SDResult["Transfer From ShiMenAgriChannel To ShiMenAgriWaterDemand"], SDResult["Water Right ShiMen AgriChannel AgriWater"])
-                
-    return OutData, [SI_Public, SI_AgriTao, SI_AgriShi]
+    MCDS, DPD = SD_MCDSandDPDvalue(SDResult["Transfer From ShiMenAgriChannel To ShiMenAgriWaterDemand"], SDResult["Water Right ShiMen AgriChannel AgriWater"])
+        
+    return OutData, [SI_Public, SI_AgriTao, SI_AgriShi], MCDS, DPD
 
 def main(argv):
     #%%
@@ -169,7 +187,7 @@ def main(argv):
     SDResult = SD_Sim1yr(SDmodel, SDInitial, SDLevelComponents, SDOutputVar, ListofFile = argv[3], Tenday2Day = True, FileDir = None, SDDecisionTimePoint = SDDecisionTimePoint)
     # ListofFile = ["./SDmodel/SD_inputData/Data_inflow_2012_full.xlsx","./SDmodel/SD_inputData/Data_allocation_2012_Test.xlsx"]
     # Calculate the SI for this year.
-    ActualRatio, SI = SD_DailyRatio(SDResult)
+    ActualRatio, SI, MCDS, DPD = SD_DailyRatio(SDResult)
     SDResultDict = SDResult.to_dict()
     # Note:
         # I think now you should be able to modify the code according to your numerical experiment design. This code is design for a single year simulation. If you want to run for multiple years, there are two ways to do it. 
@@ -182,7 +200,7 @@ def main(argv):
     # print(SDResult['ShiMen WPP Storage Pool'][-1:])
     # print(ActualRatio)
     # print(SI)
-    returnData = [SDResultDict['ShiMen Reservoir'][364], SDResultDict['ZhongZhuang Adjustment Reservoir'][364], SDResultDict['ShiMen WPP Storage Pool'][364], SI]
+    returnData = [SDResultDict['ShiMen Reservoir'][364], SDResultDict['ZhongZhuang Adjustment Reservoir'][364], SDResultDict['ShiMen WPP Storage Pool'][364], SI, MCDS, DPD]
     return(returnData)
 
 if __name__ == '__main__':

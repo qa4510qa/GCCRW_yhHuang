@@ -412,3 +412,14 @@
 2021-07-01 22:07,Amon_CAMS-CSM1-0,ssp126,{'低溫': ['green', 'green', 'green', 'green'], '高溫': ['orange', 'orange', 'orange', 'orange'], '乾旱': ['yellow', 'green', 'green', 'green']}
 2021-07-01 22:07,Amon_CAMS-CSM1-0,ssp245,{'低溫': ['green', 'green', 'green', 'green'], '高溫': ['orange', 'orange', 'orange', 'orange'], '乾旱': ['green', 'green', 'yellow', 'green']}
 2021-07-01 22:07,Amon_CAMS-CSM1-0,ssp585,{'低溫': ['green', 'green', 'green', 'green'], '高溫': ['orange', 'orange', 'orange', 'orange'], '乾旱': ['green', 'yellow', 'green', 'green']}
+2021-07-02 21:56,Amon_HadGEM3-GC31-LL,ssp126,{'低溫': ['green', 'green', 'green', 'green'], '高溫': ['orange', 'orange', 'orange', 'orange'], '乾旱': ['yellow', 'yellow', 'orange', 'yellow']}
+2021-07-02 21:56,Amon_HadGEM3-GC31-LL,ssp245,{'低溫': ['green', 'green', 'green', 'green'], '高溫': ['orange', 'orange', 'orange', 'orange'], '乾旱': ['yellow', 'green', 'orange', 'orange']}
+2021-07-02 21:56,Amon_HadGEM3-GC31-LL,ssp585,{'低溫': ['green', 'green', 'green', 'green'], '高溫': ['orange', 'orange', 'orange', 'red'], '乾旱': ['green', 'orange', 'orange', 'yellow']}
+2021-07-02 21:56,Amon_MIROC6,ssp119,{'低溫': ['green', 'green', 'green', 'green'], '高溫': ['orange', 'orange', 'orange', 'orange'], '乾旱': ['yellow', 'green', 'yellow', 'green']}
+2021-07-02 21:56,Amon_MIROC6,ssp126,{'低溫': ['green', 'green', 'green', 'green'], '高溫': ['orange', 'orange', 'orange', 'orange'], '乾旱': ['green', 'green', 'green', 'yellow']}
+2021-07-02 21:56,Amon_MIROC6,ssp245,{'低溫': ['green', 'green', 'green', 'green'], '高溫': ['orange', 'orange', 'orange', 'orange'], '乾旱': ['green', 'green', 'yellow', 'yellow']}
+2021-07-02 21:56,Amon_MIROC6,ssp585,{'低溫': ['green', 'green', 'green', 'green'], '高溫': ['orange', 'orange', 'orange', 'orange'], '乾旱': ['green', 'yellow', 'yellow', 'green']}
+2021-07-02 21:56,Amon_CAMS-CSM1-0,ssp119,{'低溫': ['green', 'green', 'green', 'green'], '高溫': ['orange', 'orange', 'orange', 'orange'], '乾旱': ['yellow', 'green', 'green', 'green']}
+2021-07-02 21:56,Amon_CAMS-CSM1-0,ssp126,{'低溫': ['green', 'green', 'green', 'green'], '高溫': ['orange', 'orange', 'orange', 'orange'], '乾旱': ['yellow', 'green', 'green', 'green']}
+2021-07-02 21:56,Amon_CAMS-CSM1-0,ssp245,{'低溫': ['green', 'green', 'green', 'green'], '高溫': ['orange', 'orange', 'orange', 'orange'], '乾旱': ['green', 'green', 'yellow', 'green']}
+2021-07-02 21:56,Amon_CAMS-CSM1-0,ssp585,{'低溫': ['green', 'green', 'green', 'green'], '高溫': ['orange', 'orange', 'orange', 'orange'], '乾旱': ['green', 'yellow', 'green', 'green']}
