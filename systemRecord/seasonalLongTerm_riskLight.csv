@@ -82,3 +82,7 @@ Time,month_now,Hazard,1個月後,2個月後,3個月後
 2021-07-02 21:56,5,低溫,green,green,green
 2021-07-02 21:56,5,高溫,orange,yellow,yellow
 2021-07-02 21:56,5,乾旱,green,red,red
+
+2021-07-06 23:34,5,低溫,green,green,green
+2021-07-06 23:34,5,高溫,yellow,yellow,yellow
+2021-07-06 23:34,5,乾旱,green,green,green

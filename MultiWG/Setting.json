@@ -1,0 +1,44 @@
+{
+    "WDPath": "./MultiWG/MultiWG",
+    "StnID": [
+        "C0C590"
+    ],
+    "WthObvCsvFile": {
+        "C0C590": "C0C590.csv"
+    },
+    "ClimScenCsvFile": {
+        "C0C590": "Amon_CAMS-CSM1-0_ssp585_2040-2060.csv"
+    },
+    "Var": [
+        "PP01",
+        "TX01"
+    ],
+    "P_Threshold": 0.01,
+    "P_Distribution": "lognorm",
+    "GenYear": 200,
+    "Condition": true,
+    "LeapYear": false,
+    "Smooth": false,
+    "FourierOrder": 2,
+    "DumpCheck": true,
+    "Plot": {
+        "FourierDailyTFit": false,
+        "KSTestCDFPlot": false,
+        "Multi_ECDFFittingPlot": false,
+        "Multi_IrCurveFittingPlot": false
+    },
+    "StatTestAlpha": {
+        "PDistTest": 0.05,
+        "Kruskal_Wallis_Test": 0.05
+    },
+    "MultiSite": {
+        "WeightMethod": "Corr",
+        "WeightPOrder": [
+            3,
+            2
+        ],
+        "SpatialAutoCorrIndex": "SDI",
+        "rSimDataPoint": 10,
+        "rSimYear": 40
+    }
+}
