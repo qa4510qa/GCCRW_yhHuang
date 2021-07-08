@@ -200,7 +200,7 @@ def main(argv):
     # print(SDResult['ShiMen WPP Storage Pool'][-1:])
     # print(ActualRatio)
     # print(SI)
-    returnData = [SDResultDict['ShiMen Reservoir'][364], SDResultDict['ZhongZhuang Adjustment Reservoir'][364], SDResultDict['ShiMen WPP Storage Pool'][364], SI, MCDS, DPD]
+    returnData = [SDResultDict['ShiMen Reservoir'][364], SDResultDict['ZhongZhuang Adjustment Reservoir'][364], SDResultDict['ShiMen WPP Storage Pool'][364], SI, MCDS, DPD] # , SDResultDict['ShiMen Reservoir'].values()
     return(returnData)
 
 if __name__ == '__main__':
