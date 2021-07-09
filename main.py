@@ -688,7 +688,7 @@ def seasonalLongTermRiskAssessment(hazardScale, riskLight_aWeek, P, first_month,
     print(i)
     print(np.mean(TEMP_local))
     print(np.std(TEMP_local))
-    generatedData['TEMP'].append([np.mean(TEMP_local)-np.std(TEMP_local), np.mean(TEMP_local)+np.std(TEMP_local)])
+    generatedData['TEMP'].append([np.mean(TEMP_local)-np.std(TEMP_local)*3, np.mean(TEMP_local)+np.std(TEMP_local)*3])
     generatedData['MN'].append([first_month+i, first_month+i])
   
 
@@ -1174,12 +1174,50 @@ def climateChangeRiskAssessment(hazardScale, GCM, scenarios, variant_id, localSt
   # generateGWLFDATA()
   # runGWLF()
   
+  # for g in GCM:
+  #   for s in scenarios[g]:
+  #     for k in range(3):
+  #       generateWRS_shortage_index(g, s, k) # for WRS drought risk
+  
+  # generate_baselineData() # 產製基期資料
+
+  f_SI_std = open('./climateData/climateChange_data/WRS_shortage_index/SI_std_Taoyuan_generatedData.csv', 'w')
+  f_SI_std.write('Model,Scenario,2020-2040,2030-2050,2040-2060\n')
+  f_SI_std.close()
+  f_MCDS_std = open('./climateData/climateChange_data/WRS_shortage_index/MCDS_std_Taoyuan_generatedData.csv', 'w')
+  f_MCDS_std.write('Model,Scenario,2020-2040,2030-2050,2040-2060\n')
+  f_MCDS_std.close()
+  f_DPD_std = open('./climateData/climateChange_data/WRS_shortage_index/DPD_std_Taoyuan_generatedData.csv', 'w')
+  f_DPD_std.write('Model,Scenario,2020-2040,2030-2050,2040-2060\n')
+  f_DPD_std.close()
   for g in GCM:
     for s in scenarios[g]:
-      for k in range(3):
-        generateWRS_shortage_index(g, s, k) # for WRS drought risk
-  
-  generate_baselineData() # 產製基期資料
+      SI=[]
+      MCDS=[]
+      DPD=[]
+      for j in range(3):
+        SI_output = open('./climateData/climateChange_data/WRS_shortage_index/{0}_{1}_{2}-{3}_SI_{4}.csv'.format(g, s, 2020+j*10, 2020+(j+2)*10, county), 'r')
+        a = SI_output.readlines()
+        SI.append(float(a[1].split(',')[-1].replace('\n','')))
+        SI_output.close()
+        MCDS_output = open('./climateData/climateChange_data/WRS_shortage_index/{0}_{1}_{2}-{3}_MCDS_{4}.csv'.format(g, s, 2020+j*10, 2020+(j+2)*10, county), 'r')
+        b = MCDS_output.readlines()
+        MCDS.append(float(b[1].split(',')[-1].replace('\n','')))
+        MCDS_output.close()
+        DPD_output = open('./climateData/climateChange_data/WRS_shortage_index/{0}_{1}_{2}-{3}_DPD_{4}.csv'.format(g, s, 2020+j*10, 2020+(j+2)*10, county), 'r')
+        c = DPD_output.readlines()
+        DPD.append(float(c[1].split(',')[-1].replace('\n','')))
+        DPD_output.close()
+      f_SI_std = open('./climateData/climateChange_data/WRS_shortage_index/SI_std_Taoyuan_generatedData.csv', 'a')
+      f_SI_std.write('{0},{1},{2},{3},{4}\n'.format(g,s,SI[0],SI[1],SI[2]))
+      f_MCDS_std = open('./climateData/climateChange_data/WRS_shortage_index/MCDS_std_Taoyuan_generatedData.csv', 'a')
+      f_MCDS_std.write('{0},{1},{2},{3},{4}\n'.format(g,s,MCDS[0],MCDS[1],MCDS[2]))
+      f_DPD_std = open('./climateData/climateChange_data/WRS_shortage_index/DPD_std_Taoyuan_generatedData.csv', 'a')
+      f_DPD_std.write('{0},{1},{2},{3},{4}\n'.format(g,s,DPD[0],DPD[1],DPD[2]))
+  f_SI_std.close()
+  f_MCDS_std.close()
+  f_DPD_std.close()
+
 
   generatedData = {}
   risk = {}
@@ -1196,11 +1234,14 @@ def climateChangeRiskAssessment(hazardScale, GCM, scenarios, variant_id, localSt
   f_Local_TEMP = open('./climateData/climateChange_data/local_TEMP/local_TEMP_generatedData.csv', 'w')
   f_Local_TEMP.write('Model,Scenario,Years,Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec\n')
   f_Local_TEMP.close()
+  f_Local_TEMP_std = open('./climateData/climateChange_data/local_TEMP/local_TEMP_std_generatedData.csv', 'w')
+  f_Local_TEMP_std.write('Model,Scenario,Years,Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep,Oct,Nov,Dec\n')
+  f_Local_TEMP_std.close()
   f = open('./systemRecord/climateChange_riskLight.csv', 'w')
   f.write('Time,GCM,scenario,Hazard,2020-2039,2030-2049,2040-2059\n')
   f.close()
 
-  baselineData = {'time': [], 'TEMP': [], 'MN': [], 'SI': [], 'MCDS': [], 'DPD': []} # 36 months for TEMP, time, MN, and 3 values for SI, MCDS and DPD
+  baselineData = {'time': [], 'TEMP': [], 'TEMP_std': [], 'MN': [], 'SI': [], 'MCDS': [], 'DPD': []} # 36 months for TEMP, time, MN, and 3 values for SI, MCDS and DPD
   for k in range(3):
     SI_output = open('./climateData/climateChange_data/WRS_shortage_index/baseline_SI_{0}.csv'.format(county), 'r')
     line = SI_output.readline()
@@ -1218,6 +1259,7 @@ def climateChangeRiskAssessment(hazardScale, GCM, scenarios, variant_id, localSt
       baselineData['DPD'].append(float(line.split(',')[1].replace('\n','')))
     DPD_output.close()
     daily_data = [[],[],[],[],[],[],[],[],[],[],[],[]] # TEMP
+    monthly_data = [[],[],[],[],[],[],[],[],[],[],[],[]] # TEMP
     TEMP_data = open("./climateData/climateChange_data/local_TEMP/baseline_{0}.csv".format(localStnID), "r")
     line = TEMP_data.readline()
     for l in range(200): # 200 years data
@@ -1227,10 +1269,13 @@ def climateChangeRiskAssessment(hazardScale, GCM, scenarios, variant_id, localSt
           daily_data[m].append(float(line.split(',')[2]))
           line = TEMP_data.readline()
           if '/' not in line:
+            # monthly_data.append(np.mean(daily_data[m]))
             break
+        monthly_data[m].append(np.mean(daily_data[m]))
     for m in range(12):
       baselineData['time'].append('{0}_{1}'.format(1996,m+1))
       baselineData['TEMP'].append(np.mean(daily_data[m]))
+      baselineData['TEMP_std'].append(np.std(monthly_data[m]))
       baselineData['MN'].append(m+1)
 
   f_SI = open('./climateData/climateChange_data/WRS_shortage_index/SI_Taoyuan_generatedData.csv', 'w')
@@ -1246,19 +1291,24 @@ def climateChangeRiskAssessment(hazardScale, GCM, scenarios, variant_id, localSt
   f_Local_TEMP.write('{0},{1},{2}-{3},{4},{5},{6},{7},'.format('-','baseline','baseline','baseline',baselineData['TEMP'][0],baselineData['TEMP'][1],baselineData['TEMP'][2],baselineData['TEMP'][3]))
   f_Local_TEMP.write('{0},{1},{2},{3},{4},{5},{6},{7}\n'.format(baselineData['TEMP'][4],baselineData['TEMP'][5],baselineData['TEMP'][6],baselineData['TEMP'][7],baselineData['TEMP'][8],baselineData['TEMP'][9],baselineData['TEMP'][10],baselineData['TEMP'][11]))
   f_Local_TEMP.close()
+  f_Local_TEMP_std = open('./climateData/climateChange_data/local_TEMP/local_TEMP_std_generatedData.csv', 'w')
+  f_Local_TEMP_std.write('{0},{1},{2}-{3},{4},{5},{6},{7},'.format('-','baseline','baseline','baseline',baselineData['TEMP_std'][0],baselineData['TEMP_std'][1],baselineData['TEMP_std'][2],baselineData['TEMP_std'][3]))
+  f_Local_TEMP_std.write('{0},{1},{2},{3},{4},{5},{6},{7}\n'.format(baselineData['TEMP_std'][4],baselineData['TEMP_std'][5],baselineData['TEMP_std'][6],baselineData['TEMP_std'][7],baselineData['TEMP_std'][8],baselineData['TEMP_std'][9],baselineData['TEMP_std'][10],baselineData['TEMP_std'][11]))
+  f_Local_TEMP_std.close()
 
   for g in GCM:
-    generatedData['baseline'] = {'time': [], 'TEMP': [], 'MN': [], 'SI': [], 'MCDS': [], 'DPD': []} # 12 months for TEMP, time, MN, and 1 values for SI, MCDS and DPD
+    generatedData['baseline'] = {'time': [], 'TEMP': [], 'TEMP_std': [], 'MN': [], 'SI': [], 'MCDS': [], 'DPD': []} # 12 months for TEMP, time, MN, and 1 values for SI, MCDS and DPD
     generatedData['baseline']['time'] = baselineData['time']
     generatedData['baseline']['TEMP'] = baselineData['TEMP']
     generatedData['baseline']['MN'] = baselineData['MN']
     generatedData['baseline']['SI'] = baselineData['SI']
     generatedData['baseline']['MCDS'] = baselineData['MCDS']
     generatedData['baseline']['DPD'] = baselineData['DPD']
+    generatedData['baseline']['TEMP_std'] = baselineData['TEMP_std']
     risk['baseline'] = {"MinT":[],"MaxT":[], 'SI': [], 'MCDS': [], 'DPD': []}
     riskLight['baseline'] = {"低溫":[],"高溫":[],  'SI': [], 'MCDS': [], 'DPD': [],"乾旱":[]}
     for s in scenarios[g]:
-      generatedData[s] = {'time': [], 'TEMP': [], 'MN': [], 'SI': [], 'MCDS': [], 'DPD': []} # 36 months for TEMP, time, MN, and 3 values for SI, MCDS and DPD
+      generatedData[s] = {'time': [], 'TEMP': [], 'TEMP_std': [], 'MN': [], 'SI': [], 'MCDS': [], 'DPD': []} # 36 months for TEMP, time, MN, and 3 values for SI, MCDS and DPD
       risk[s] = {"MinT":[],"MaxT":[], 'SI': [], 'MCDS': [], 'DPD': []}
       riskLight[s] = {"低溫":[],"高溫":[],  'SI': [], 'MCDS': [], 'DPD': [],"乾旱":[]}
       for k in range(3): # 3 * 20years
@@ -1278,6 +1328,7 @@ def climateChangeRiskAssessment(hazardScale, GCM, scenarios, variant_id, localSt
           generatedData[s]['DPD'].append(float(line.split(',')[1].replace('\n','')))
         DPD_output.close()
         daily_data = [[],[],[],[],[],[],[],[],[],[],[],[]] # TEMP
+        monthly_data = [[],[],[],[],[],[],[],[],[],[],[],[]] # TEMP
         TEMP_data = open("./climateData/climateChange_data/local_TEMP/{0}_{1}_{2}-{3}_{4}.csv".format(g, s, 2020+k*10, 2020+(k+2)*10, localStnID), "r")
         line = TEMP_data.readline()
         for l in range(200): # 200 years data
@@ -1288,25 +1339,12 @@ def climateChangeRiskAssessment(hazardScale, GCM, scenarios, variant_id, localSt
               line = TEMP_data.readline()
               if '/' not in line:
                 break
+            monthly_data[m].append(np.mean(daily_data[m]))
         for m in range(12):
           generatedData[s]['time'].append('{0}_{1}'.format(2020+k*10,m+1))
           generatedData[s]['TEMP'].append(np.mean(daily_data[m]))
-          generatedData[s]['MN'].append(m+1)
-
-    generatedData = indoorClimateDataEstimation("climateChange", generatedData)
-
-    # risk = {
-    #   'baseline':{"MinT":[],"MaxT":[], 'SI': [], 'MCDS': [], 'DPD': []} # 12 months *3
-    #   'ssp126':{"MinT":[],"MaxT":[], 'SI': [], 'MCDS': [], 'DPD': []}, # 36 months
-    #   'ssp245':{"MinT":[],"MaxT":[], 'SI': [], 'MCDS': [], 'DPD': []},
-    #   'ssp585':{"MinT":[],"MaxT":[], 'SI': [], 'MCDS': [], 'DPD': []}
-    # }
-    # riskLight={
-    #   'baseline':{"低溫":[],"高溫":[],  'SI': [], 'MCDS': [], 'DPD': [],"乾旱":[]},# 1*20years *3
-    #   'ssp126':{"低溫":[],"高溫":[],  'SI': [], 'MCDS': [], 'DPD': [],"乾旱":[]},# 3*20years
-    #   'ssp245':{"低溫":[],"高溫":[],  'SI': [], 'MCDS': [], 'DPD': [],"乾旱":[]},
-    #   'ssp585':{"低溫":[],"高溫":[],  'SI': [], 'MCDS': [], 'DPD': [],"乾旱":[]}
-    # } 
+          generatedData[s]['TEMP_std'].append(np.std(monthly_data[m]))
+          generatedData[s]['MN'].append(m+1) 
 
     for s in scenarios[g]:
       f_SI = open('./climateData/climateChange_data/WRS_shortage_index/SI_Taoyuan_generatedData.csv', 'a')
@@ -1323,7 +1361,26 @@ def climateChangeRiskAssessment(hazardScale, GCM, scenarios, variant_id, localSt
         f_Local_TEMP.write('{0},{1},{2}-{3},{4},{5},{6},{7},'.format(g,s,2020+k*10,2040+k*10,generatedData[s]['TEMP'][12*k],generatedData[s]['TEMP'][12*k+1],generatedData[s]['TEMP'][12*k+2],generatedData[s]['TEMP'][12*k+3]))
         f_Local_TEMP.write('{0},{1},{2},{3},{4},{5},{6},{7}\n'.format(generatedData[s]['TEMP'][12*k+4],generatedData[s]['TEMP'][12*k+5],generatedData[s]['TEMP'][12*k+6],generatedData[s]['TEMP'][12*k+7],generatedData[s]['TEMP'][12*k+8],generatedData[s]['TEMP'][12*k+9],generatedData[s]['TEMP'][12*k+10],generatedData[s]['TEMP'][12*k+11]))
       f_Local_TEMP.close()
+      f_Local_TEMP_std = open('./climateData/climateChange_data/local_TEMP/local_TEMP_std_generatedData.csv', 'a')
+      for k in range(3):
+        f_Local_TEMP_std.write('{0},{1},{2}-{3},{4},{5},{6},{7},'.format(g,s,2020+k*10,2040+k*10,generatedData[s]['TEMP_std'][12*k],generatedData[s]['TEMP_std'][12*k+1],generatedData[s]['TEMP_std'][12*k+2],generatedData[s]['TEMP_std'][12*k+3]))
+        f_Local_TEMP_std.write('{0},{1},{2},{3},{4},{5},{6},{7}\n'.format(generatedData[s]['TEMP_std'][12*k+4],generatedData[s]['TEMP_std'][12*k+5],generatedData[s]['TEMP_std'][12*k+6],generatedData[s]['TEMP_std'][12*k+7],generatedData[s]['TEMP_std'][12*k+8],generatedData[s]['TEMP_std'][12*k+9],generatedData[s]['TEMP_std'][12*k+10],generatedData[s]['TEMP_std'][12*k+11]))
+      f_Local_TEMP_std.close()
 
+    generatedData = indoorClimateDataEstimation("climateChange", generatedData)
+    # risk = {
+    #   'baseline':{"MinT":[],"MaxT":[], 'SI': [], 'MCDS': [], 'DPD': []} # 12 months *3
+    #   'ssp126':{"MinT":[],"MaxT":[], 'SI': [], 'MCDS': [], 'DPD': []}, # 36 months
+    #   'ssp245':{"MinT":[],"MaxT":[], 'SI': [], 'MCDS': [], 'DPD': []},
+    #   'ssp585':{"MinT":[],"MaxT":[], 'SI': [], 'MCDS': [], 'DPD': []}
+    # }
+    # riskLight={
+    #   'baseline':{"低溫":[],"高溫":[],  'SI': [], 'MCDS': [], 'DPD': [],"乾旱":[]},# 1*20years *3
+    #   'ssp126':{"低溫":[],"高溫":[],  'SI': [], 'MCDS': [], 'DPD': [],"乾旱":[]},# 3*20years
+    #   'ssp245':{"低溫":[],"高溫":[],  'SI': [], 'MCDS': [], 'DPD': [],"乾旱":[]},
+    #   'ssp585':{"低溫":[],"高溫":[],  'SI': [], 'MCDS': [], 'DPD': [],"乾旱":[]}
+    # }
+    
     corrFactor = {"MinT":"AirTC_Avg","MaxT":"AirTC_Avg","SI":"SI", "MCDS":"MCDS", "DPD":"DPD"} #climate factor and risk factor corresponding
     def getRiskScale(s, i, value):
       for k in range(6):
@@ -1369,12 +1426,12 @@ def climateChangeRiskAssessment(hazardScale, GCM, scenarios, variant_id, localSt
         elif i == 'MinT':
           hazardScaleItem = hazardScale["nursery_AirTC_Avg_avg"]
           for j in range(36):
-            value = generatedData[s]['TEMP'][j]
+            value = generatedData[s]['TEMP'][j]-generatedData[s]['TEMP_std'][j]*3
             getRiskScale(s,i, value)
         elif i == 'MaxT':
           hazardScaleItem = hazardScale["flowering_AirTC_Avg_avg"]
           for j in range(36):
-            value = generatedData[s]['TEMP'][j]
+            value = generatedData[s]['TEMP'][j]+generatedData[s]['TEMP_std'][j]*3
             getRiskScale(s,i, value)
       # print('climateChange riskScale_{0}:{1}\n'.format(s,risk[s]))
 
@@ -1384,9 +1441,6 @@ def climateChangeRiskAssessment(hazardScale, GCM, scenarios, variant_id, localSt
         for j in range(len(risk[s][i])):
           if i == "MinT":
             Hz = '低溫'
-            # print(s,i,j)
-            # print(generatedData[s]['TEMP'])
-            # print(risk[s][i][j])
             if risk[s][i][j][-3:]=="igh":
               risk[s][i][j] = 0
             else:
@@ -1408,13 +1462,11 @@ def climateChangeRiskAssessment(hazardScale, GCM, scenarios, variant_id, localSt
             riskLight[s][i].append(riskLightScale[-risk[s][i][j]+3])
           elif i == "MinT" or i == "MaxT":
             if j%(int(len(risk[s][i])/3)) == int((len(risk[s][i])/3)-1):
-              # print(j)
-              # print(score)
-              if score<8:
+              if score<=10:
                 riskLight[s][Hz].append('green')
-              elif score<12:
+              elif score<=12:
                 riskLight[s][Hz].append('yellow')
-              elif score<16:
+              elif score<=14:
                 riskLight[s][Hz].append('orange')
               else:
                 riskLight[s][Hz].append('red')
@@ -1427,13 +1479,13 @@ def climateChangeRiskAssessment(hazardScale, GCM, scenarios, variant_id, localSt
           riskLight[s]['乾旱'][i] = riskLightScale[max(0,riskLightScale.index(riskLight[s]["SI"][i])-1)]
       print('climateChange riskLight {0}_{1}:{2}\n'.format(g,s,riskLight[s]))
       
-      # f = open('./systemRecord/climateChange_riskLight.csv', 'a')
-      # for Hz in riskLight[s].keys():
-      #   f.write('{0},{1},{2},{3},{4},{5},{6},{7}\n'.format(now.strftime('%Y-%m-%d %H:%M'),g,s,Hz,riskLight[s][Hz][0],riskLight[s][Hz][1],riskLight[s][Hz][2],riskLight[s][Hz][3]))
-      # f.close()
-      # f = open('./systemRecord/climateChange_riskLight.txt', 'a')
-      # f.write('{0},{1},{2},{3}\n'.format(now.strftime('%Y-%m-%d %H:%M'),g,s,riskLight[s]))
-      # f.close()
+      f = open('./systemRecord/climateChange_riskLight.csv', 'a')
+      for Hz in riskLight[s].keys():
+        f.write('{0},{1},{2},{3},{4},{5},{6}\n'.format(now.strftime('%Y-%m-%d %H:%M'),g,s,Hz,riskLight[s][Hz][0],riskLight[s][Hz][1],riskLight[s][Hz][2]))
+      f.close()
+      f = open('./systemRecord/climateChange_riskLight.txt', 'a')
+      f.write('{0},{1},{2},{3}\n'.format(now.strftime('%Y-%m-%d %H:%M'),g,s,riskLight[s]))
+      f.close()
   return riskLight
 
 def operationAssessment(timeScale,riskLight):
@@ -1494,47 +1546,47 @@ def operationAssessment(timeScale,riskLight):
 def indoorClimateDataEstimation(timescale,data):
   aWeek_weights = {
     'MinT':{
-      'MinT': [-2.21106665e-01, 1.15090587e+00],
-      'HR': [-1.56657910e+01, -4.19990965e-03],
-      'MN': [-7.24721046e+00, -9.09076293e-02],
-      'RH':[3.02289382e+00, -2.81975878e-02],
-      'WS':[-1.02510753e+01, 1.47904145e-01],
+      'MinT': [-1.54725470e+00,  1.13485099e+00],
+      'HR': [-3.49607412e+00, -2.35260177e-03],
+      'MN': [-3.76557457e+00, -1.25550082e-01],
+      'RH':[-2.84914637e+00, -3.85158135e-02],
+      'WS':[-1.07641778e+01,  1.28351810e-01],
     },  
-    # [-2.21106665e-01  1.15090587e+00 -1.56657910e+01 -4.19990965e-03 -7.24721046e+00 -9.09076293e-02  3.02289382e+00 -2.81975878e-02 -1.02510753e+01  1.47904145e-01]
+    #last: [-2.21106665e-01  1.15090587e+00 -1.56657910e+01 -4.19990965e-03 -7.24721046e+00 -9.09076293e-02  3.02289382e+00 -2.81975878e-02 -1.02510753e+01  1.47904145e-01]
     'MaxT':{
-      'MinT': [-2.21106665e-01, 1.15090587e+00],
-      'HR': [-1.56657910e+01, -4.19990965e-03],
-      'MN': [-7.24721046e+00, -9.09076293e-02],
-      'RH':[3.02289382e+00, -2.81975878e-02],
-      'WS':[-1.02510753e+01, 1.47904145e-01],
+      'MaxT': [-1.54725470e+00,  1.13485099e+00],
+      'HR': [-3.49607412e+00, -2.35260177e-03],
+      'MN': [-3.76557457e+00, -1.25550082e-01],
+      'RH':[-2.84914637e+00, -3.85158135e-02],
+      'WS':[-1.07641778e+01,  1.28351810e-01],
     },
   }
   seasonalLongTerm_weights = {
     'TEMP':{
-      'TEMP': [-4.3154551, 0.9343015],
-      'MN': [3.8008508, 0.05959764]
-    }, # [-4.3154551   0.9343015   3.8008508   0.05959764]
+      'TEMP': [ 0.02340405, 1.1197346],
+      'MN': [2.22518769, -0.06540444]
+    }, #last: [-4.3154551   0.9343015   3.8008508   0.05959764]
   }
   climateChange_weights = {
     'TEMP':{
-      'TEMP': [-4.3154551, 0.9343015],
-      'MN': [3.8008508, 0.05959764]
+      'TEMP': [ 0.02340405, 1.1197346],
+      'MN': [2.22518769, -0.06540444]
     },
   }
 
   new_data = {}
 
   def findingWeights():
-    indoorDataScheme = open('./realTime_IoT_data/indoorClimateData/indoorClimateData_scheme.txt', 'r')
+    indoorDataScheme = open('./climateData/realTime_IoT_data/indoorClimateData/indoorClimateData_scheme.txt', 'r')
     dataLabel_indoor = indoorDataScheme.readline().split(',')
     indoorDataScheme.close()
-    outdoorDataScheme = open ('./realTime_IoT_data/outdoorClimateData/outdoorClimateData_scheme.txt', 'r')
+    outdoorDataScheme = open ('./climateData/realTime_IoT_data/outdoorClimateData/outdoorClimateData_scheme.txt', 'r')
     dataLabel_outdoor = outdoorDataScheme.readline().split(',')
     outdoorDataScheme.close()
-    indoorData_f = open('./realTime_IoT_data/indoorClimateData/testdata_indoor.txt', 'rb')
+    indoorData_f = open('./climateData/realTime_IoT_data/indoorClimateData/testdata_indoor.txt', 'rb')
     indoorData = indoorData_f.readlines()
     indoorData_f.close()
-    outdoorData_f = open('./realTime_IoT_data/outdoorClimateData/testdata_outdoor.txt', 'rb')
+    outdoorData_f = open('./climateData/realTime_IoT_data/outdoorClimateData/testdata_outdoor.txt', 'rb')
     outdoorData = outdoorData_f.readlines()
     outdoorData_f.close()
 
@@ -1625,7 +1677,7 @@ def indoorClimateDataEstimation(timescale,data):
     fitness_function = fitness_func_2
 
     num_generations = 600
-    num_parents_mating = 4
+    num_parents_mating = 6
 
     sol_per_pop = 20
     num_genes = 10 # 參數數量 4 or 10
@@ -1660,24 +1712,29 @@ def indoorClimateDataEstimation(timescale,data):
     print("Parameters of the best solution : {solution}".format(solution=solution))
     print("Fitness value of the best solution = {solution_fitness}".format(solution_fitness=solution_fitness))
 
+    # bias_mean = 0
+    # f = open('./climateData/realTime_IoT_data/data_test.csv', 'w')
+    # for i in range(num_of_trainingData, len(indoor_data['AirTC_Avg']), 1):
+    #   value = (outdoor_data['AirTC_Avg'][i]-solution[0])*solution[1]+(outdoor_data['MN'][i]-solution[2])*solution[3]
+    #   bias = np.abs(value-indoor_data['AirTC_Avg'][i])
+    #   bias_mean += bias**2
+    #   f.write('{0},{1},{2},{3},{4}\n'.format(outdoor_data['TIMESTAMP'][i], float(indoor_data['AirTC_Avg'][i]), value, bias, outdoor_data['MN'][i]))
+    # f.close()
+    # bias_mean = (bias_mean/(len(indoor_data['AirTC_Avg'])-num_of_trainingData))**0.5
+    # print('bias_mean_1',bias_mean) #bias_mean_1 = 2.422
+    
     bias_mean = 0
-    # f = open('./realTime_IoT_data/data_test.csv', 'w')
-    f = open('./realTime_IoT_data/data_test_2.csv', 'w')
+    f = open('./climateData/realTime_IoT_data/data_test_2.csv', 'w')
     for i in range(num_of_trainingData, len(indoor_data['AirTC_Avg']), 1):
-      # value = (outdoor_data['AirTC_Avg'][i]-solution[0])*solution[1]+(outdoor_data['MN'][i]-solution[2])*solution[3]
       value_2 = (outdoor_data['AirTC_Avg'][i]-solution[0])*solution[1]+(outdoor_data['HR'][i]-solution[2])*solution[3]+(outdoor_data['MN'][i]-solution[4])*solution[5]+(outdoor_data['RH'][i]-solution[6])*solution[7]+(outdoor_data['WS'][i]-solution[8])*solution[9]
-      # bias = np.abs(value-indoor_data['AirTC_Avg'][i])
       bias = np.abs(value_2-indoor_data['AirTC_Avg'][i])
       bias_mean += bias**2
-      # f.write('{0},{1},{2},{3},{4}\n'.format(outdoor_data['TIMESTAMP'][i], float(indoor_data['AirTC_Avg'][i]), value, bias, outdoor_data['MN'][i]))
       f.write('{0},{1},{2},{3},{4},{5},{6}.{7}\n'.format(outdoor_data['TIMESTAMP'][i], float(indoor_data['AirTC_Avg'][i]), value_2, bias, outdoor_data['HR'][i], outdoor_data['MN'][i], outdoor_data['RH'][i], outdoor_data['WS'][i]))
     f.close()
 
     bias_mean = (bias_mean/(len(indoor_data['AirTC_Avg'])-num_of_trainingData))**0.5
-    print(bias_mean) #bias_mean_1 = 2.570,  bias_mean_2 = 2.339
+    print('bias_mean_2',bias_mean) # bias_mean_2 = 2.337
 
-  # print(data)
-  
   def estimate_indoorData():
     if timescale == 'aWeek':
       for i in data.keys():
@@ -1703,20 +1760,21 @@ def indoorClimateDataEstimation(timescale,data):
         elif i != 'MN': # 'HR' and 'MN' are for correction only
           new_data[i] = data[i]
     elif timescale == 'climateChange':
-      for s  in data.keys():
+      for s in data.keys():
         new_data[s] = {}
         for i in data[s].keys():
-              if i in climateChange_weights.keys():
-                new_data[s][i] = []
-                for j in range(len(data[s][i])):
-                  new_data[s][i].append(0)
-                  for k in climateChange_weights[i].keys():
-                    new_data[s][i][j] += (data[s][k][j]-climateChange_weights[i][k][0])*climateChange_weights[i][k][1]
-              elif i != 'MN': # 'HR' and 'MN' are for correction only
-                new_data[s][i] = data[s][i]
+          if i in climateChange_weights.keys():
+            new_data[s][i] = []
+            for j in range(len(data[s][i])):
+              new_data[s][i].append(0)
+              for k in climateChange_weights[i].keys():
+                new_data[s][i][j] += (data[s][k][j]-climateChange_weights[i][k][0])*climateChange_weights[i][k][1]
+          else: 
+            new_data[s][i] = data[s][i]
 
   # findingWeights()
   estimate_indoorData()
+  # print(new_data)
   return new_data
 
 def testGA():
@@ -1877,7 +1935,6 @@ def WGENValidation(localStnID,waterResourceSystemStnID):
       else:
         f.write('{0},{1},{2},{3},{4},{5}\n'.format(np.mean(data[0]),np.std(data[0]),np.mean(data[1]),np.std(data[1]),np.mean(data[2]),np.std(data[2])))
 
-
 def MultiWGValidation():
   TEMP = [[],[],[],[],[],[],[],[],[],[],[],[]]
   PRCP = [[],[],[],[],[],[],[],[],[],[],[],[]]
@@ -1943,6 +2000,142 @@ def SDValidation(SDInitial, waterResourceSystemStnID):
   for i in range(len(ShiMen)):
     f.write('{0}\n'.format(ShiMen[i]))
 
+def GAValidation():
+  indoorDataScheme = open('./climateData/realTime_IoT_data/indoorClimateData/indoorClimateData_scheme.txt', 'r')
+  dataLabel_indoor = indoorDataScheme.readline().split(',')
+  indoorDataScheme.close()
+  outdoorDataScheme = open ('./climateData/realTime_IoT_data/outdoorClimateData/outdoorClimateData_scheme.txt', 'r')
+  dataLabel_outdoor = outdoorDataScheme.readline().split(',')
+  outdoorDataScheme.close()
+  indoorData_f = open('./climateData/realTime_IoT_data/indoorClimateData/testdata_indoor.txt', 'rb')
+  indoorData = indoorData_f.readlines()
+  indoorData_f.close()
+  outdoorData_f = open('./climateData/realTime_IoT_data/outdoorClimateData/testdata_outdoor.txt', 'rb')
+  outdoorData = outdoorData_f.readlines()
+  outdoorData_f.close()
+
+  start_time = ''
+  indoor_starter=0
+  outdoor_starter=0
+  for i in range(len(outdoorData)):
+    if str(indoorData[1]).split(',')[0] == str(outdoorData[i]).split(',')[0]:
+      start_time = str(outdoorData[i]).split(',')[0]
+      indoor_starter = 1
+      outdoor_starter = i
+  if start_time == '':
+    for i in range(len(indoorData)):
+      if str(outdoorData[1]).split(',')[0] == str(indoorData[i]).split(',')[0]:
+        start_time = str(indoorData[i]).split(',')[0]
+        indoor_starter = i
+        outdoor_starter = 1
+
+  j = outdoor_starter
+  indoor_data = {'TIMESTAMP': [], 'AirTC_Avg':[]}
+  outdoor_data = {'TIMESTAMP': [],'AirTC_Avg':[], 'RH':[], 'WS':[], 'MN':[],'HR':[]}
+  for i in range(indoor_starter,len(indoorData),1):
+    if str(indoorData[i]).split(',')[0] == str(outdoorData[j]).split(',')[0]:
+      if str(indoorData[i]).split(',')[dataLabel_indoor.index('AirTC_Avg')] == '"NAN"' or str(outdoorData[j]).split(',')[dataLabel_outdoor.index('AirTC_Avg')] == '"NAN"' or str(outdoorData[j]).split(',')[dataLabel_outdoor.index('RH')] == '"NAN"' or str(outdoorData[j]).split(',')[dataLabel_outdoor.index('WS_ms_Avg')] == '"NAN"':
+        continue
+      else:
+        indoor_data['TIMESTAMP'].append(str(indoorData[i]).split(',')[dataLabel_indoor.index('TIMESTAMP')])
+        indoor_data['AirTC_Avg'].append(str(indoorData[i]).split(',')[dataLabel_indoor.index('AirTC_Avg')])
+        outdoor_data['TIMESTAMP'].append(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('TIMESTAMP')])
+        outdoor_data['AirTC_Avg'].append(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('AirTC_Avg')])
+        outdoor_data['RH'].append(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('RH')])
+        outdoor_data['WS'].append(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('WS_ms_Avg')])
+        outdoor_data['MN'].append(int(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('TIMESTAMP')][8:10]))
+        outdoor_data['HR'].append(int(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('TIMESTAMP')][14:16]))
+      if j == len(outdoorData):
+        break
+      j+=1
+    elif int(str(indoorData[i]).split(',')[0][2:].replace(' ','').replace(':','').replace('-','').replace('"',''))<int(str(outdoorData[j]).split(',')[0][2:].replace(' ','').replace(':','').replace('-','').replace('"','')):
+      continue
+    else:
+      while str(indoorData[i]).split(',')[0] != str(outdoorData[j]).split(',')[0]:
+        j+=1
+        if j == len(outdoorData):
+          break
+      if str(indoorData[i]).split(',')[dataLabel_indoor.index('AirTC_Avg')] == '"NAN"' or str(outdoorData[j]).split(',')[dataLabel_outdoor.index('AirTC_Avg')] == '"NAN"':
+        continue
+      else:
+        indoor_data['TIMESTAMP'].append(str(indoorData[i]).split(',')[dataLabel_indoor.index('TIMESTAMP')])
+        indoor_data['AirTC_Avg'].append(str(indoorData[i]).split(',')[dataLabel_indoor.index('AirTC_Avg')])
+        outdoor_data['TIMESTAMP'].append(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('TIMESTAMP')])
+        outdoor_data['AirTC_Avg'].append(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('AirTC_Avg')])
+        outdoor_data['RH'].append(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('RH')])
+        outdoor_data['WS'].append(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('WS_ms_Avg')])
+        outdoor_data['MN'].append(int(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('TIMESTAMP')][8:10]))
+        outdoor_data['HR'].append(int(str(outdoorData[j]).split(',')[dataLabel_outdoor.index('TIMESTAMP')][14:16]))
+      if j == len(outdoorData):
+        break
+      j+=1
+
+  for i in range(len(indoor_data['AirTC_Avg'])):
+    indoor_data['AirTC_Avg'][i] = float(indoor_data['AirTC_Avg'][i])
+    outdoor_data['AirTC_Avg'][i] = float(outdoor_data['AirTC_Avg'][i])
+    outdoor_data['RH'][i] = float(outdoor_data['RH'][i])
+    outdoor_data['WS'][i] = float(outdoor_data['WS'][i])
+  
+  num_of_trainingData = len(indoor_data['AirTC_Avg'])-len(indoor_data['AirTC_Avg'])//5
+  print(num_of_trainingData)
+
+  aWeek_weights = {
+    'MinT':{
+      'MinT': [-2.21106665e-01, 1.15090587e+00],
+      'HR': [-1.56657910e+01, -4.19990965e-03],
+      'MN': [-7.24721046e+00, -9.09076293e-02],
+      'RH':[3.02289382e+00, -2.81975878e-02],
+      'WS':[-1.02510753e+01, 1.47904145e-01],
+    },  
+    # [-2.21106665e-01  1.15090587e+00 -1.56657910e+01 -4.19990965e-03 -7.24721046e+00 -9.09076293e-02  3.02289382e+00 -2.81975878e-02 -1.02510753e+01  1.47904145e-01]
+    'MaxT':{
+      'MinT': [-2.21106665e-01, 1.15090587e+00],
+      'HR': [-1.56657910e+01, -4.19990965e-03],
+      'MN': [-7.24721046e+00, -9.09076293e-02],
+      'RH':[3.02289382e+00, -2.81975878e-02],
+      'WS':[-1.02510753e+01, 1.47904145e-01],
+    },
+  }
+  seasonalLongTerm_weights = {
+    'TEMP':{
+      'TEMP': [-4.3154551, 0.9343015],
+      'MN': [3.8008508, 0.05959764]
+    }, # [-4.3154551   0.9343015   3.8008508   0.05959764]
+  }
+
+  bias_mean = 0
+  bias_0_mean = 0
+  f = open('./GA_validation_1.csv', 'w')
+  solution = [seasonalLongTerm_weights['TEMP']['TEMP'][0],seasonalLongTerm_weights['TEMP']['TEMP'][1],seasonalLongTerm_weights['TEMP']['MN'][0], seasonalLongTerm_weights['TEMP']['MN'][1]]
+  print(solution)
+  for i in range(num_of_trainingData, len(indoor_data['AirTC_Avg']), 1):
+    value = (outdoor_data['AirTC_Avg'][i]-solution[0])*solution[1]+(outdoor_data['MN'][i]-solution[2])*solution[3]
+    bias = np.abs(value-indoor_data['AirTC_Avg'][i])
+    bias_0 = np.abs(outdoor_data['AirTC_Avg'][i]-indoor_data['AirTC_Avg'][i])
+    bias_mean += bias**2
+    bias_0_mean += bias_0**2
+    f.write('{0},{1}/{2},{3},{4},{5},{6},{7}\n'.format(outdoor_data['TIMESTAMP'][i][3:-1], outdoor_data['TIMESTAMP'][i].split('-')[0][3:7], outdoor_data['TIMESTAMP'][i].split('-')[1], outdoor_data['AirTC_Avg'][i], float(indoor_data['AirTC_Avg'][i]), value, bias, bias_0, outdoor_data['MN'][i]))
+  f.close()
+
+  bias_mean = (bias_mean/(len(indoor_data['AirTC_Avg'])-num_of_trainingData))**0.5
+  bias_0_mean = (bias_0_mean/(len(indoor_data['AirTC_Avg'])-num_of_trainingData))**0.5
+  print(bias_mean, bias_0_mean)
+  
+  f = open('./GA_validation_2.csv', 'w')
+  solution = [aWeek_weights['MinT']['MinT'][0],aWeek_weights['MinT']['MinT'][1],aWeek_weights['MinT']['HR'][0],aWeek_weights['MinT']['HR'][1],aWeek_weights['MinT']['MN'][0],aWeek_weights['MinT']['MN'][1], aWeek_weights['MinT']['RH'][0],aWeek_weights['MinT']['RH'][1], aWeek_weights['MinT']['WS'][0],aWeek_weights['MinT']['WS'][1]]
+  print(solution)
+  for i in range(num_of_trainingData, len(indoor_data['AirTC_Avg']), 1):
+    value_2 = (outdoor_data['AirTC_Avg'][i]-solution[0])*solution[1]+(outdoor_data['HR'][i]-solution[2])*solution[3]+(outdoor_data['MN'][i]-solution[4])*solution[5]+(outdoor_data['RH'][i]-solution[6])*solution[7]+(outdoor_data['WS'][i]-solution[8])*solution[9]
+    bias = np.abs(value_2-indoor_data['AirTC_Avg'][i])
+    bias_0 = np.abs(outdoor_data['AirTC_Avg'][i]-indoor_data['AirTC_Avg'][i])
+    bias_mean += bias**2
+    bias_0_mean += bias_0**2
+    f.write('{0},{1}/{2},{3},{4},{5},{6}.{7},{8},{9},{10}\n'.format(outdoor_data['TIMESTAMP'][i][3:-1], outdoor_data['TIMESTAMP'][i].split('-')[0][3:7], outdoor_data['TIMESTAMP'][i].split('-')[1],outdoor_data['AirTC_Avg'][i], float(indoor_data['AirTC_Avg'][i]), value_2, bias, outdoor_data['HR'][i], outdoor_data['MN'][i], outdoor_data['RH'][i], outdoor_data['WS'][i]))
+  f.close()
+
+  bias_mean = (bias_mean/(len(indoor_data['AirTC_Avg'])-num_of_trainingData))**0.5
+  bias_0_mean = (bias_0_mean/(len(indoor_data['AirTC_Avg'])-num_of_trainingData))**0.5
+  print(bias_mean, bias_0_mean)
 
 def main():
   seasonalLongTerm_P = {}
@@ -1966,27 +2159,29 @@ def main():
     reservoirStorageNow = inputData["reservoirStorageNow"]
     waterRight = inputData["waterRight"]
 
-  # realTimehazardScale = getHazardScale(crop, county, growthStage[0], "realTime")
-  # riskLight_realTime = realTimeRiskAssessment(realTimehazardScale)
-  # operationAssessment("realTime",riskLight_realTime)
+  realTimehazardScale = getHazardScale(crop, county, growthStage[0], "realTime")
+  riskLight_realTime = realTimeRiskAssessment(realTimehazardScale)
+  operationAssessment("realTime",riskLight_realTime)
   
-  # aWeekhazardScale = getHazardScale(crop, county, growthStage[0], "aWeek")
-  # riskLight_aWeek = aWeekRiskAssessment(location, aWeekhazardScale, riskLight_realTime)
-  # operationAssessment("aWeek",riskLight_aWeek)
+  aWeekhazardScale = getHazardScale(crop, county, growthStage[0], "aWeek")
+  riskLight_aWeek = aWeekRiskAssessment(location, aWeekhazardScale, riskLight_realTime)
+  operationAssessment("aWeek",riskLight_aWeek)
 
-  # seasonalLongTermhazardScale = getHazardScale(crop, county, growthStage, "seasonalLongTerm", first_month)
-  # riskLight_seasonalLongTerm = seasonalLongTermRiskAssessment(seasonalLongTermhazardScale, riskLight_aWeek, seasonalLongTerm_P, first_month, localStnID, waterResourceSystemStnID, reservoirStorageNow, waterRight)
-  # operationAssessment("seasonalLongTerm",riskLight_seasonalLongTerm)
+  seasonalLongTermhazardScale = getHazardScale(crop, county, growthStage, "seasonalLongTerm", first_month)
+  riskLight_seasonalLongTerm = seasonalLongTermRiskAssessment(seasonalLongTermhazardScale, riskLight_aWeek, seasonalLongTerm_P, first_month, localStnID, waterResourceSystemStnID, reservoirStorageNow, waterRight)
+  operationAssessment("seasonalLongTerm",riskLight_seasonalLongTerm)
 
   climateChangehazardScale = getHazardScale(crop, county, "", "climateChange")
   riskLight_climateChange = climateChangeRiskAssessment(climateChangehazardScale, GCM, scenarios, variant_id, localStnID, waterResourceSystemStnID, county, reservoirName, SDInitial)
   operationAssessment("climateChange",riskLight_climateChange)
   
+  # indoorClimateDataEstimation('','')
   # testGA()
   # realTimeValidation(crop, county, growthStage)
   # GWLFValidation(waterResourceSystemStnID)
   # WGENValidation(localStnID,waterResourceSystemStnID)
   # MultiWGValidation()
   # SDValidation(SDInitial, waterResourceSystemStnID)
+  # GAValidation()
 
 main()

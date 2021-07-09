@@ -257,3 +257,5 @@
 2021-07-07 11:10:{'乾旱': {'method': '評估是否轉作', 'risk_factor': 'Exposure', 'time': '3個月後面臨危害'}}
 2021-07-07 11:11:{'乾旱': {'method': '評估是否轉作', 'risk_factor': 'Exposure', 'time': '3個月後面臨危害'}}
 2021-07-07 11:11:{'乾旱': {'method': '評估是否轉作', 'risk_factor': 'Exposure', 'time': '3個月後面臨危害'}}
+2021-07-09 16:44:{'高溫': {'method': '評估是否添購設備', 'risk_factor': 'Sensitivity', 'time': '3個月後面臨危害'}, '乾旱': {'method': '評估是否轉作', 'risk_factor': 'Exposure', 'time': '3個月後面臨危害'}}
+2021-07-09 16:51:{'高溫': {'method': '評估是否添購設備', 'risk_factor': 'Sensitivity', 'time': '3個月後面臨危害'}, '乾旱': {'method': '評估是否轉作', 'risk_factor': 'Exposure', 'time': '3個月後面臨危害'}}
