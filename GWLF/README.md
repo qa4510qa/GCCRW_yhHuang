@@ -1,22 +1,10 @@
-# AgriHydro_GWLF
-  Here we provide AgriHydro_GWLF sub model as a stand alone GWLF model for user's convience.
-User can either run GWLF.py directly from Python or download the EXE version from the link provided in GWLF_EXE.txt.
-Inside the folder we also provide sample input files "Shihmen2008_2017_SampleWthData.csv" & "ShihmenGWLFPar.csv", which represent weather input data and parameter input data respectively.
-Following the format of sample input files, user can run the GWLF model for their own study area.
+# GCCRW Readme
 
-# Demo 
-### 1. Enter your working directory
+GCCRW(Greenhouse Crop Climate Risk early Warning system) can be seperated into four time-scale sub models including "RealTime", "aWeek", "SeasonalLongTerm", and "ClimateChange". To run GCCRW, one should execute the main.py after complete all parameter settings. Required data are as followed:
+1. Climate Data: to estimate realtime, seasonalLongTerm, and climateChange risk. aWeek future climate data will be extract from CWB database through API directly. 
+2. Condition Data: to define hazard level.
+3. OperationMethodData: to generate proper operational suggestions accroding to actual farm conditions.
+4. SDmodel: to simulate the water resources supply situation using SDmodel of vensim.
+5. Other parameters: parameters setting of other sub-model, should be setted up in the inputData.json.
 
-![](https://i.imgur.com/4SJTr09.png)
-
-### 2. Enter corresponding files and values
-
-![](https://i.imgur.com/4gMF99J.png)
-
-### 3. If the Discharge is provided in "Shihmen2008_2017_SampleWthData.csv" than the validation results will be displayed. 
-
-![](https://i.imgur.com/rNoad8Z.png)
-
-### 4. Output files
-
-![](https://i.imgur.com/OEAY1o7.png)
+Algorithm logic please refer to <<從台灣傳統溫室建構智慧溫室物聯網系統：以溫室番茄的氣候風險為例，黃宇弘，2021>>
